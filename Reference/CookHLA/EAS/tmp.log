@@ -1,0 +1,21 @@
+PLINK v2.00a2.3LM AVX2 Intel (24 Jan 2020)
+Options in effect:
+  --bfile 1000G_REF.EAS.chr6.hg18.29mb-34mb.inT1DGC
+  --freq
+  --out tmp
+
+Hostname: h3
+Working directory: /data01/hakin/Packing1/Reference/CookHLA/EAS
+Start time: Tue Feb  6 15:25:44 2024
+
+Random number seed: 1707200744
+305724 MiB RAM detected; reserving 152862 MiB for main workspace.
+Using up to 88 threads (change this with --threads).
+504 samples (0 females, 0 males, 504 ambiguous; 504 founders) loaded from
+1000G_REF.EAS.chr6.hg18.29mb-34mb.inT1DGC.fam.
+8016 variants loaded from 1000G_REF.EAS.chr6.hg18.29mb-34mb.inT1DGC.bim.
+Note: No phenotype data present.
+Calculating allele frequencies... done.
+--freq: Allele frequencies (founders only) written to tmp.afreq .
+
+End time: Tue Feb  6 15:25:44 2024

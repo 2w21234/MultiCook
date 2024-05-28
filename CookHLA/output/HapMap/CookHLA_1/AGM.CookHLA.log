@@ -1,0 +1,1 @@
+Namespace(input='input/HapMap', human_genome='19', reference='Reference/CookHLA/EUR/1000G_REF.EUR.chr6.hg18.29mb-34mb.inT1DGC', out='output/HapMap/CookHLA_1/AGM.CookHLA')
