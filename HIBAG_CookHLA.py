@@ -11,7 +11,7 @@ python HIBAG_CookHLA.py -i INPUT
                         -hg HUMAN GENOME VERSION
 '''
 
-import os.path
+
 import os,sys
 import subprocess as sub
 import argparse
@@ -19,10 +19,6 @@ from src.BASH import BASH
 from src.bag2vcfh import bag2vcfh
 from src.vcf2plink import vcf2plink
 import numpy as np
-import CookHLA
-#from CookHLA import CookHLA
-#from CookHLA.MakeGeneticMap import MakeGeneticMap
-#from CookHLA.src import HLA_Imputation
 
 
 
@@ -58,14 +54,7 @@ def HIBAG_RUN(_in, _ref, _out, _log, _fit):
 
 
 def CookHLA_RUN(_in, _out, _ref, _hg, _mem,_bgl):
-    os.chdir('./CookHLA')
-    print(os.getcwd())
-    if(not os.path.isabs(_in)):
-        _in='../'+_in
-        _out='../'+_out
-        _ref='../'+_ref
     command = '{} -i {} -ref {} -o {} -hg {}' .format(MakeGeneticMap, _in, _ref, _out+"AGM.CookHLA", _hg)
-    print(command)
     BASH(command, _out+"AGM.CookHLA.log") 
     if _bgl=='4':
         command = '{} -i {} -ref {} -o {} -gm {} -ae {} -mem {} -hg {} -mp 9 -bgl4' \
@@ -77,7 +66,7 @@ def CookHLA_RUN(_in, _out, _ref, _hg, _mem,_bgl):
                     _out+"AGM.CookHLA.mach_step.avg.clpsB", _out+"AGM.CookHLA.aver.erate", _mem, _hg)
     print(command)
     BASH(command, _out+"CookHLA_OUT.log") 
-    os.chdir('..')
+
 
 def HIBAG_CookHLA(__input, __output,__references,__tools,__weights,__mem,__hg, __fit,__bgl):
     
@@ -106,17 +95,14 @@ def HIBAG_CookHLA(__input, __output,__references,__tools,__weights,__mem,__hg, _
             HIBAG_RUN(__input, __references[idx_HIBAG[i]], HIBAG_dir+"HIBAG_OUT", HIBAG_dir+"HIBAG_OUT.log", __fit)
             command='rm {}'.format(HIBAG_dir+"HIBAG_OUT_temp.log")
             BASH(command)
+            bag2vcfh (HIBAG_dir+"HIBAG_OUT")
             command='echo {} {}' .format(HIBAG_dir+"HIBAG_OUT.vcfh", __weights[idx_HIBAG[i]])
-            BASH(command, INPUT_LIST)
             print("The output file's name with a given weight is written in "+INPUT_LIST+".")
-            print(os.getcwd())
-            #BASH('which R')
-            print('Rscript hibag_prob.r '+HIBAG_dir)
-            BASH('Rscript hibag_prob.r '+HIBAG_dir)
+            BASH(command, INPUT_LIST) 
             idx+=1
 
     if N_CookHLA > 0: 
-        #os.chdir('./CookHLA')
+        os.chdir('./CookHLA')
         for i in range(N_CookHLA):
             Cook_suffix='CookHLA_'+str(i+1)
             print("{}. CookHLA {} RUN\n".format(idx,i+1),flush=True)
@@ -125,7 +111,6 @@ def HIBAG_CookHLA(__input, __output,__references,__tools,__weights,__mem,__hg, _
             command='mkdir -p '+cook_dir
             BASH(command)
             print("\tThe log will be written to {}\n".format(cook_dir+"CookHLA_OUT.log"),flush=True)
-            os.system('cd CookHLA')
             CookHLA_RUN(__input, cook_dir, __references[idx_CookHLA[i]], __hg, __mem, __bgl)
             if __bgl=='4':
                 command = 'echo {} {}' .format(__output+'/' + Cook_suffix + "/CookHLA_OUT.MHC.QC.exon2.3000.raw_imputation_out.vcf", __weights[idx_CookHLA[i]])
@@ -136,7 +121,7 @@ def HIBAG_CookHLA(__input, __output,__references,__tools,__weights,__mem,__hg, _
             BASH(command, INPUT_LIST,True) 
             print("The output file's name with a given weight is written in "+INPUT_LIST+".")
             idx+=1
-            
+        os.chdir('../')
     command='mkdir -p '+__output+'/'+'Merge'
     BASH(command)
     command='mkdir -p '+__output+'/'+'Michigan_1'
