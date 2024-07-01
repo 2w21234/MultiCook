@@ -32,7 +32,7 @@ conda activate MultiCook
 
 ## (3) Running code
 MultiCook combines the results of CookHLA, Michigan server imputation and HIBAG. 
-MultiCook provides a convenient script(**Imputation_single.py**) for running single-panel-based CookHLA and HIBAG simultaneously.
+MultiCook provides a convenient script (**Imputation_single.py**) for running single-panel-based CookHLA and HIBAG simultaneously.
 <br/>
 
 ```
@@ -74,9 +74,15 @@ After running **Merge.py**, **result.all.alleles** containing the predicted HLA 
 <br/>
 CookHLA provides the code to measure the imputation accuracy.  
 Under the CookHLA folder (**MultiCook/CookHLA/**), given the answer file, users can measure the accuracy as following:  
+
 ```
 python -m measureAcc ../output/HapMap/HapMap.answer.alleles  ../output/HapMap/Merge/result.all.alleles ../output/HapMap/Merge/result
 ```
+<br/>
+<br/>
 
 
-
+## (3) References
+Cook S, Choi W, Lim H, et al. Accurate imputation of human leukocyte antigens with CookHLA. Nature Communications. Feb 2021;12(1)1264. doi:10.1038/s41467-021-21541-5
+Luo Y, Kanai M, Choi W, et al. A high-resolution HLA reference panel capturing global population diversity enables multi-ancestry fine-mapping in HIV host response. Nat Genet. Oct 2021;53(10):1504-1516. doi:10.1038/s41588-021-00935-7
+Zheng X, Shen J, Cox C, et al. HIBAG--HLA genotype imputation with attribute bagging. Pharmacogenomics J. Apr 2014;14(2):192-200. doi:10.1038/tpj.2013.18
