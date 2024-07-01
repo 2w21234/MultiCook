@@ -35,7 +35,9 @@ MultiCook combines the results of CookHLA, Michigan server imputation and HIBAG.
 To run MultiCook, 
 ```
 python HIBAG_CookHLA.py -i input/HapMap -t CookHLA HIBAG -o output/HapMap -r Reference/CookHLA/EUR/1000G_REF.EUR.chr6.hg18.29mb-34mb.inT1DGC Reference/HIBAG_prefit/European-HLA4-hg19.RData -w 0.5 0.5 -m 16g -hg 19 
+```
 
+
+```
 python Merge.py -i /data01/hakin/tmp/MultiCook/output/HapMap/input_list -o /data01/hakin/tmp/MultiCook/output/HapMap/Merge
-
 ```
