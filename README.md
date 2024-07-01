@@ -37,14 +37,24 @@ MultiCook provides a convenient script(**Imputation_single.py**) for running sin
 ```
 python Imputation_single.py -i input/HapMap -t CookHLA HIBAG -o output/HapMap -r Reference/CookHLA/EUR/1000G_REF.EUR.chr6.hg18.29mb-34mb.inT1DGC Reference/HIBAG_prefit/European-HLA4-hg19.RData -w 0.5 0.5 -m 16g -hg 19 
 ```
-**Imputation_single.py** takes 7 arguments.\
--i : path to the input(target) data in plink binary format
--t : names of tools (CookHLA or HIBAG)
--r : paths to the reference panels
--w : weights for the reference panels
--m : memory allocated for running CookHLA
--hg : the version of human genome assembly of input data (hg19 or hg18)
+**Imputation_single.py** takes 7 arguments.  
+-i : the path to the input (target) data in plink binary format  
+-t : names of tools (CookHLA or HIBAG)  
+-o : the name of folder to contain the results of the imputaion
+-r : paths to the reference panels  
+-w : weights for the reference panels  
+-m : the memory allocated for running CookHLA  
+-hg : the version of human genome assembly of input data (hg19 or hg18)  
+
+
+
+
+After running **Imputation_single.py**, a file named **input_list** containing the paths to the results from single-panel-based tools with their weights is generated.
+**input_list** is the input for the merger (**Merge.py**) of the results and can be manually 
 
 ```
 python Merge.py -i /data01/hakin/tmp/MultiCook/output/HapMap/input_list -o /data01/hakin/tmp/MultiCook/output/HapMap/Merge
 ```
+
+
+
