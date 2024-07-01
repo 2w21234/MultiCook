@@ -1,4 +1,4 @@
-![image](https://github.com/2w21234/MultiCook/assets/37434378/36561a97-8e87-43b5-9759-76fde4ac14dc)
+
 # MultiCook
 ## (1) Introduction
 
