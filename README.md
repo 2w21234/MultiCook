@@ -1,4 +1,4 @@
-
+![image](https://github.com/2w21234/MultiCook/assets/37434378/36561a97-8e87-43b5-9759-76fde4ac14dc)
 # MultiCook
 ## (1) Introduction
 
@@ -33,22 +33,20 @@ conda activate MultiCook
 ## (3) Running code
 MultiCook combines the results of CookHLA, Michigan server imputation and HIBAG. 
 MultiCook provides a convenient script(**Imputation_single.py**) for running single-panel-based CookHLA and HIBAG simultaneously.
+<br/>
 
 ```
 python Imputation_single.py -i input/HapMap -t CookHLA HIBAG -o output/HapMap -r Reference/CookHLA/EUR/1000G_REF.EUR.chr6.hg18.29mb-34mb.inT1DGC Reference/HIBAG_prefit/European-HLA4-hg19.RData -w 0.5 0.5 -m 16g -hg 19 
 ```
 **Imputation_single.py** takes 7 arguments.  
--i : the path to the input (target) data in plink binary format  
--t : names of tools (CookHLA or HIBAG)  
--o : the name of folder to contain the results of the imputaion
--r : paths to the reference panels  
--w : weights for the reference panels  
--m : the memory allocated for running CookHLA  
--hg : the version of human genome assembly of input data (hg19 or hg18)  
-  
-  
-  
-
+> -i : the path to the input (target) data in plink binary format  
+> -t : names of tools (CookHLA or HIBAG)  
+> -o : the name of folder to contain the results of the imputaion
+> -r : paths to the reference panels  
+> -w : weights for the reference panels  
+> -m : the memory allocated for running CookHLA  
+> -hg : the version of human genome assembly of input data (hg19 or hg18)  
+<br/>
 
 
 After running **Imputation_single.py**, a file named **input_list** containing the paths to the results from single-panel-based tools with their weights is generated.  
@@ -61,13 +59,23 @@ For HIBAG, the path to 'HIBAG_OUT.vcfh' must be included.
 
 Users who want to merge the Michigan impuation server's reult can manually edit **input_list** to add the path to the reult ('chr6.dose.vcf') from the Michigan imputation server with its weight.  
 
-
-
-
-
-
 ```
-python Merge.py -i /data01/hakin/tmp/MultiCook/output/HapMap/input_list -o /data01/hakin/tmp/MultiCook/output/HapMap/Merge
+python Merge.py -i output/HapMap/input_list -o output/HapMap/Merge/result
+```
+
+
+**Merge.py** takes 2 arguments.  
+> -i : the path to **input_list**  
+> -o : the path to the output of the merger  
+
+
+After running **Merge.py**, **result.all.alleles** containing the predicted HLA allele pairs is generated.  
+
+<br/>
+CookHLA provides the code to measure the imputation accuracy.  
+Under the CookHLA folder (**MultiCook/CookHLA/**), given the answer file, users can measure the accuracy as following:  
+```
+python -m measureAcc ../output/HapMap/HapMap.answer.alleles  ../output/HapMap/Merge/result.all.alleles ../output/HapMap/Merge/result
 ```
 
 
