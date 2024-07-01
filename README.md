@@ -13,6 +13,8 @@ MultiCook calculates the posterior probability for each imputation result and su
 
 ![image](https://github.com/2w21234/MultiCook/assets/37434378/69c71ace-2502-4d79-b99b-0bf12e7fdb4b) 
 
+<br/>
+<br/>
 
 ## (2) Installation
 After clonning the anaconda virtual environment of MultiCook, create and activate the environment.  
@@ -29,6 +31,8 @@ cd MultiCook
 conda create --file MultiCook.yaml
 conda activate MultiCook
 ```
+<br/>
+<br/>
 
 ## (3) Running code
 MultiCook combines the results of CookHLA, Michigan server imputation and HIBAG. 
@@ -83,6 +87,8 @@ python -m measureAcc ../output/HapMap/HapMap.answer.alleles  ../output/HapMap/Me
 
 
 ## (3) References
-Cook S, Choi W, Lim H, et al. Accurate imputation of human leukocyte antigens with CookHLA. Nature Communications. Feb 2021;12(1)1264. doi:10.1038/s41467-021-21541-5
-Luo Y, Kanai M, Choi W, et al. A high-resolution HLA reference panel capturing global population diversity enables multi-ancestry fine-mapping in HIV host response. Nat Genet. Oct 2021;53(10):1504-1516. doi:10.1038/s41588-021-00935-7
-Zheng X, Shen J, Cox C, et al. HIBAG--HLA genotype imputation with attribute bagging. Pharmacogenomics J. Apr 2014;14(2):192-200. doi:10.1038/tpj.2013.18
+Cook S, Choi W, Lim H, et al. Accurate imputation of human leukocyte antigens with CookHLA. Nature Communications. Feb 2021;12(1)1264. doi:10.1038/s41467-021-21541-5  
+
+Luo Y, Kanai M, Choi W, et al. A high-resolution HLA reference panel capturing global population diversity enables multi-ancestry fine-mapping in HIV host response. Nat Genet. Oct 2021;53(10):1504-1516. doi:10.1038/s41588-021-00935-7  
+
+Zheng X, Shen J, Cox C, et al. HIBAG--HLA genotype imputation with attribute bagging. Pharmacogenomics J. Apr 2014;14(2):192-200. doi:10.1038/tpj.2013.18  
