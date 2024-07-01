@@ -45,9 +45,9 @@ python Imputation_single.py -i input/HapMap -t CookHLA HIBAG -o output/HapMap -r
 -w : weights for the reference panels  
 -m : the memory allocated for running CookHLA  
 -hg : the version of human genome assembly of input data (hg19 or hg18)  
-
-
-
+  
+  
+  
 
 
 
@@ -55,9 +55,9 @@ After running **Imputation_single.py**, a file named **input_list** containing t
 
 **input_list** is the input file for the merger (**Merge.py**) of the results. 
 
-For CookHLA, 'CookHLA_OUT.MHC.QC.exon2.3000.raw_imputation_out.vcf' must be included.  
+For CookHLA, the path to 'CookHLA_OUT.MHC.QC.exon2.3000.raw_imputation_out.vcf' must be included.  
 
-For HIBAG, 'HIBAG_OUT.vcfh' must be included.  
+For HIBAG, the path to 'HIBAG_OUT.vcfh' must be included.  
 
 Users who want to merge the Michigan impuation server's reult can manually edit **input_list** to add the path to the reult ('chr6.dose.vcf') from the Michigan imputation server with its weight.  
 
