@@ -89,17 +89,17 @@ def HIBAG_CookHLA(__input, __output,__references,__tools,__weights,__mem,__hg, _
             HIBAG_dir = __output+'/' + HIBAG_suffix+'/'
             os.makedirs(HIBAG_dir, exist_ok=True)
             print("\tThe log will be written to {}\n".format(HIBAG_dir+"HIBAG_OUT.log"),flush=True)
-            
-            HIBAG_RUN(__input, __references[idx_HIBAG[i]], HIBAG_dir+"HIBAG_OUT", HIBAG_dir+"HIBAG_OUT.log", __fit)
+
+            HIBAG_RUN(__input, __references[idx_HIBAG[i]], HIBAG_dir+"HIBAG_OUT", HIBAG_dir+"HIBAG_OUT.log", __fit)             
             command='rm {}'.format(HIBAG_dir+"HIBAG_OUT_temp.log")
             BASH(command)
             command='echo {} {}' .format(HIBAG_dir+"HIBAG_OUT.vcfh", __weights[idx_HIBAG[i]])
             BASH(command, INPUT_LIST)
             print("The output file's name with a given weight is written in "+INPUT_LIST+".")
             print(os.getcwd())
-            #BASH('which R')
-            print('Rscript src/hibag_prob.r '+HIBAG_dir)
-            BASH('Rscript src/hibag_prob.r '+HIBAG_dir)
+            command='Rscript src/hibag_prob.r '+HIBAG_dir
+            print(command)
+            os.system(command+' >& '+ __output+'_hibag_prob.log')
             idx+=1
 
     if N_CookHLA > 0: 
