@@ -65,6 +65,8 @@ Users who want to merge the Michigan impuation server's reult can manually edit 
 
 After running Michigan imputation server, a file names 'chr6.dose.vcf' which is default name of Michigan server is generated.
 To merge this result within ```MultiCook```, users should insert the path of 'chr6.dose.vcf' with its weight.  
+We provide the result('chr6.dose.vcf.gz') of Michigan server, which needs to be unzipped (```gunzip chr6.dose.vcf.gz```).
+
 
 
 ```
