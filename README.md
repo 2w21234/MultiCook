@@ -28,7 +28,7 @@ The yaml file of MultiCook is based on
 ```
 git clone https://github.com/2w21234/MultiCook.git
 cd MultiCook
-conda create --file MultiCook.yaml python=3.9
+conda env create --file MultiCook.yaml python=3.9
 conda activate MultiCook
 ```
 <br/>
