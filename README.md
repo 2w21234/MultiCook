@@ -86,7 +86,7 @@ CookHLA provides the code to measure the imputation accuracy.
 Under the CookHLA folder(**MultiCook/CookHLA/**), given the answer file, users can measure the accuracy as following:  
 
 ```
-python -m measureAcc ../input/HapMap/HapMap.answer.alleles  ../output/HapMap/Merge/result.all.alleles ../output/HapMap/Merge/result
+python -m measureAcc ../input/HapMap.answer.alleles  ../output/HapMap/Merge/result.all.alleles ../output/HapMap/Merge/result
 ```
 <br/>
 <br/>
