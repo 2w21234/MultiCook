@@ -131,17 +131,14 @@ def HIBAG_CookHLA(__input, __output,__references,__tools,__weights,__mem,__hg, _
             
 if __name__=="__main__":
     parser=argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
-    parser.add_argument("--input","-i",default='input/1958BC.hg19', help='\nINPUT (PLINK file)\n\n')
-    parser.add_argument("--output","-o",default='output/1958BC.hg_test',help='\nOUTPUT (*.alleles)\n\n')
-    parser.add_argument("--tool","-t",default='CookHLA CookHLA HIBAG',help="\nTools to merge\n\n", nargs='+')
-    parser.add_argument("--reference","-r",default="Reference/CookHLA/AFR/1000G_REF.AFR.chr6.hg18.29mb-34mb.inT1DGC Reference/CookHLA/Pan-Asian/Pan-Asian_REF Reference/HIBAG_prefit/African-HLA4-hg19.RData"
-    ,help='\nSuper Population\n\n', nargs='+')
-    parser.add_argument("--weight","-w",default='0.3 0.3 0.2'
-    ,help='\nSuper Population\n\n', nargs='+')
-    parser.add_argument("--memory","-mem",default='16g',help='\nMemory\n\n')
-    parser.add_argument("--human-genome","-hg",default='19',help="\nhg version\n\n")
-    parser.add_argument("--hibag-fit", "-fit", default=False, nargs="?", type=str2bool)
-    parser.add_argument("--bgl","-bgl", default='4')
+    parser.add_argument("--input","-i", help='\nINPUT (PLINK file)\n\n')
+    parser.add_argument("--output","-o",help='\nOUTPUT (*.alleles)\n\n')
+    parser.add_argument("--tool","-t",help="\nTools to merge\n\n", nargs='+')
+    parser.add_argument("--reference","-r",help='\nSuper Population\n\n', nargs='+')
+    parser.add_argument("--weight","-w" ,help='\nSuper Population\n\n', nargs='+')
+    parser.add_argument("--memory","-mem",help='\nMemory\n\n')
+    parser.add_argument("--human-genome","-hg",help="\nhg version\n\n")
+    parser.add_argument("--hibag-fit", "-fit",default=False,nargs="?", type=str2bool)
+    parser.add_argument("--bgl","-bgl",default='4')
     args=parser.parse_args()
     HIBAG_CookHLA(args.input,args.output,args.reference,args.tool, args.weight, args.memory,args.human_genome, args.hibag_fit, args.bgl)
-    
