@@ -138,6 +138,7 @@ dependencies:
   - r-crayon=1.5.2=r42hc72bb7e_2
   - r-credentials=2.0.1=r42hc72bb7e_0
   - r-curl=4.3.3=r42h06615bd_1
+  - r-data.table=1.15.2=r42h029312a_0
   - r-desc=1.4.3=r42hc72bb7e_0
   - r-devtools=2.4.5=r42hc72bb7e_2
   - r-diffobj=0.3.5=r42h57805ef_2
