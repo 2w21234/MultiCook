@@ -45,7 +45,7 @@ python Imputation_single.py -i input/HapMap -t CookHLA HIBAG -o output/HapMap -r
 **Imputation_single.py** takes 7 arguments.  
 > -i : the path to the input (target) data in plink binary format  
 > -t : names of tools (CookHLA or HIBAG)  
-> -o : the name of folder to contain the results of the imputaion
+> -o : the name of folder to contain the results of the imputaion  
 > -r : paths to the reference panels  
 > -w : weights for the reference panels  
 > -m : the memory allocated for running CookHLA  
@@ -62,6 +62,10 @@ For CookHLA, the path to 'CookHLA_OUT.MHC.QC.exon2.3000.raw_imputation_out.vcf' 
 For HIBAG, the path to 'HIBAG_OUT.vcfh' must be included.  
 
 Users who want to merge the Michigan impuation server's reult can manually edit **input_list** to add the path to the reult ('chr6.dose.vcf') from the Michigan imputation server with its weight.  
+
+After running Michigan imputation server, a file names 'chr6.dose.vcf' which is default name of Michigan server is generated.
+To merge this result within ```MultiCook```, users should insert the path of 'chr6.dose.vcf' with its weight.  
+
 
 ```
 python Merge.py -i output/HapMap/input_list -o output/HapMap/Merge/result
