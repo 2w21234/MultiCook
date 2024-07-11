@@ -17,7 +17,7 @@ MultiCook calculates the posterior probability for each imputation result and su
 <br/>
 
 ## (2) Installation
-After clonning the anaconda(**v3**) virtual environment of MultiCook, create and activate the environment.  
+After clonning the anaconda virtual environment of MultiCook, create and activate the environment.  
 The yaml file of MultiCook is based on  
 > python v3.9  
 > plink v1.90  
