@@ -95,7 +95,7 @@ python -m measureAcc ../input/HapMap.answer.alleles  ../output/HapMap/Merge/resu
 
 
 ## (4) References
-**Kim H, Lim H, Han B. MultiCook: a tool that improves accuracy of HLA imputation by combining probabilities from multiple reference panels**
+**Kim H, Lim H and Han B. MultiCook: a tool that improves accuracy of HLA imputation by combining probabilities from multiple reference panels**
 
 Cook S, Choi W, Lim H, et al. Accurate imputation of human leukocyte antigens with CookHLA. Nature Communications. Feb 2021;12(1)1264. doi:10.1038/s41467-021-21541-5  
 
