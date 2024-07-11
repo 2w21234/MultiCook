@@ -85,7 +85,7 @@ After running **Merge.py**, **result.all.alleles** containing the predicted HLA 
 
 CookHLA provides the code to measure the imputation accuracy.  
 
-Under the CookHLA folder(**MultiCook/CookHLA/**), given the answer file, users can measure the accuracy as following:  
+Under the CookHLA folder (**MultiCook/CookHLA/**), given the answer file, users can measure the accuracy as following:  
 
 ```
 python -m measureAcc ../input/HapMap.answer.alleles  ../output/HapMap/Merge/result.all.alleles ../output/HapMap/Merge/result
