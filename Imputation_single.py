@@ -40,13 +40,11 @@ def HIBAG_RUN(_in, _ref, _out, _log, _fit):
         command = '{} -i {} -r {} -o {}'.format(HIBAG_fit, _in, _ref, _out)
     print(command)
     BASH(command, _log)    
-    BASH(command, _out+"CookHLA_OUT.log") 
 
 
 
 def CookHLA_RUN(_in, _out, _ref, _hg, _mem,_bgl):
     os.chdir('./CookHLA')
-    print(os.getcwd())
     if(not os.path.isabs(_in)):
         _in='../'+_in
         _out='../'+_out
@@ -96,7 +94,6 @@ def HIBAG_CookHLA(__input, __output,__references,__tools,__weights,__mem,__hg, _
             command='echo {} {}' .format(HIBAG_dir+"HIBAG_OUT.vcfh", __weights[idx_HIBAG[i]])
             BASH(command, INPUT_LIST)
             print("The output file's name with a given weight is written in "+INPUT_LIST+".")
-            print(os.getcwd())
             command='Rscript src/hibag_prob.r '+HIBAG_dir
             print(command)
             os.system(command+' >& '+ __output+'_hibag_prob.log')
@@ -108,7 +105,6 @@ def HIBAG_CookHLA(__input, __output,__references,__tools,__weights,__mem,__hg, _
             Cook_suffix='CookHLA_'+str(i+1)
             print("{}. CookHLA {} RUN\n".format(idx,i+1),flush=True)
             cook_dir = __output+'/' + Cook_suffix+'/'
-            print(cook_dir)
             command='mkdir -p '+cook_dir
             BASH(command)
             print("\tThe log will be written to {}\n".format(cook_dir+"CookHLA_OUT.log"),flush=True)
