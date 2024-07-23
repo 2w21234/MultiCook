@@ -38,7 +38,7 @@ def HIBAG_RUN(_in, _ref, _out, _log, _fit):
     	command = '{} {} {} {}'. format(HIBAG_prefit, _in, _ref, _out)
     elif _fit==True:
         command = '{} -i {} -r {} -o {}'.format(HIBAG_fit, _in, _ref, _out)
-    print(command)
+    print('\tRunning code : '+command+'\n')
     BASH(command, _log)    
 
 
@@ -50,7 +50,7 @@ def CookHLA_RUN(_in, _out, _ref, _hg, _mem,_bgl):
         _out='../'+_out
         _ref='../'+_ref
     command = '{} -i {} -ref {} -o {} -hg {}' .format(MakeGeneticMap, _in, _ref, _out+"AGM.CookHLA", _hg)
-    print(command)
+    print('\tRunning code : '+command+'\n')
     BASH(command, _out+"AGM.CookHLA.log") 
     if _bgl=='4':
         command = '{} -i {} -ref {} -o {} -gm {} -ae {} -mem {} -hg {} -mp 9 -bgl4' \
@@ -60,7 +60,7 @@ def CookHLA_RUN(_in, _out, _ref, _hg, _mem,_bgl):
                 command = '{} -i {} -ref {} -o {} -gm {} -ae {} -mem {} -hg {} -mp 9' \
                     .format(CookHLA, _in, _ref, _out+"CookHLA_OUT", \
                     _out+"AGM.CookHLA.mach_step.avg.clpsB", _out+"AGM.CookHLA.aver.erate", _mem, _hg)
-    print(command)
+    print('\tRunning code : '+command+'\n')
     BASH(command, _out+"CookHLA_OUT.log") 
     os.chdir('..')
 
@@ -93,9 +93,9 @@ def HIBAG_CookHLA(__input, __output,__references,__tools,__weights,__mem,__hg, _
             BASH(command)
             command='echo {} {}' .format(HIBAG_dir+"HIBAG_OUT.vcfh", __weights[idx_HIBAG[i]])
             BASH(command, INPUT_LIST)
-            print("The output file's name with a given weight is written in "+INPUT_LIST+".")
+            print("\tThe output file's name with a given weight is written in "+INPUT_LIST+".\n")
             command='Rscript src/hibag_prob.r '+HIBAG_dir
-            print(command)
+            print('\tRunning code : '+command+'\n')
             os.system(command+' >& '+ __output+'_hibag_prob.log')
             idx+=1
 
@@ -117,7 +117,7 @@ def HIBAG_CookHLA(__input, __output,__references,__tools,__weights,__mem,__hg, _
             else:
                 raise NameError('4 or 5 is required for beagle version.')
             BASH(command, INPUT_LIST,True) 
-            print("The output file's name with a given weight is written in "+INPUT_LIST+".")
+            print("\tThe output file's name with a given weight is written in "+INPUT_LIST+".\n")
             idx+=1
             
     command='mkdir -p '+__output+'/'+'Merge'
