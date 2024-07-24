@@ -90,8 +90,30 @@ Under the CookHLA folder (**MultiCook/CookHLA/**), given the answer file, users 
 ```
 python -m measureAcc ../input/HapMap.answer.alleles  ../output/HapMap/Merge/result.all.alleles ../output/HapMap/Merge/result
 ```
+
+
+Michigan imputation server requires **vcf** file, which is different from **plink bfile** of **CookHLA** or **HIBAG**.  
+To merge the result of Michigan imputation server, the user should convert the format.  
+This conversion should be done under a directory which includes input files(**HapMap.bed, HapMap.bim, HapMap.fam**).  
+The following codes are for a conversion of toy example **plink bfile** (Refer to 'https://imputationserver.readthedocs.io/en/latest/prepare-your-data/' for details).  
+Under the folder(**MultiCook/input**),
+
+```
+wget http://www.well.ox.ac.uk/~wrayner/tools/HRC-1000G-check-bim-v4.2.7.zip
+wget ftp://ngs.sanger.ac.uk/production/hrc/HRC.r1-1/HRC.r1-1.GRCh37.wgs.mac5.sites.tab.gz
+gunzip HRC.r1-1.GRCh37.wgs.mac5.sites.tab.gz
+unzip HRC-1000G-check-bim-v4.2.7.zip
+
+plink --freq --bfile HapMap --out HapMap
+perl HRC-1000G-check-bim.pl -b HapMap.bim -f HapMap.frq -r HRC.r1-1.GRCh37.wgs.mac5.sites.tab -h
+sh Run-plink.sh
+```
+
+
 <br/>
 <br/>
+
+
 
 
 ## (4) References
