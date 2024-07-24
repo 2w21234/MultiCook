@@ -20,9 +20,9 @@ dependencies:
   - bwidget=1.9.14=ha770c72_1
   - bzip2=1.0.8=h7b6447c_0
   - c-ares=1.25.0=hd590300_0
-  - ca-certificates=2024.6.2=hbcca054_0
+  - ca-certificates=2024.7.4=hbcca054_0
   - cairo=1.16.0=h18b612c_1001
-  - certifi=2024.6.2=pyhd8ed1ab_0
+  - certifi=2024.7.4=pyhd8ed1ab_0
   - charset-normalizer=3.3.2=pyhd8ed1ab_0
   - cloudpathlib=0.17.0=pyhd8ed1ab_0
   - curl=7.88.1=hdc1c0ab_1
@@ -92,7 +92,7 @@ dependencies:
   - openblas=0.3.4=ha44fe06_0
   - openblas-devel=0.3.21=h06a4308_0
   - openjdk=8.0.152=h7b6447c_3
-  - openssl=3.3.1=h4ab18f5_1
+  - openssl=3.3.1=h4bc722e_2
   - packaging=23.2=pyhd8ed1ab_0
   - pandas=1.4.2=py39h1832856_1
   - pandoc=3.1.3=h32600fe_0
@@ -100,6 +100,7 @@ dependencies:
   - pcre=8.45=h9c3ff4c_0
   - pcre2=10.37=hc3806b6_1
   - perl=5.26.2=h14c3975_0
+  - perl-termreadkey=2.38=pl526h14c3975_1
   - pip=23.3.2=pyhd8ed1ab_0
   - pixman=0.38.0=h516909a_1003
   - platformdirs=4.2.0=pyhd8ed1ab_0
@@ -138,7 +139,6 @@ dependencies:
   - r-crayon=1.5.2=r42hc72bb7e_2
   - r-credentials=2.0.1=r42hc72bb7e_0
   - r-curl=4.3.3=r42h06615bd_1
-  - r-data.table=1.15.2=r42h029312a_0
   - r-desc=1.4.3=r42hc72bb7e_0
   - r-devtools=2.4.5=r42hc72bb7e_2
   - r-diffobj=0.3.5=r42h57805ef_2
