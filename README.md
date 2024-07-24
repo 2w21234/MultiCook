@@ -107,6 +107,9 @@ unzip HRC-1000G-check-bim-v4.2.7.zip
 plink --freq --bfile HapMap --out HapMap
 perl HRC-1000G-check-bim.pl -b HapMap.bim -f HapMap.frq -r HRC.r1-1.GRCh37.wgs.mac5.sites.tab -h
 sh Run-plink.sh
+plink --bfile HapMap-updated-chr6 --recode vcf --out HapMap
+bgzip -c HapMap.vcf > HapMap.vcf.gz
+rm HapMap-updated*
 ```
 Then **HapMap.vcf.gz** is generated for the input of Michigan imputation server.
 
