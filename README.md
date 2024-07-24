@@ -111,7 +111,7 @@ plink --bfile HapMap-updated-chr6 --recode vcf --out HapMap
 bgzip -c HapMap.vcf > HapMap.vcf.gz
 rm HapMap-updated*
 ```
-Then **HapMap.vcf.gz** is generated for the input of Michigan imputation server.
+Then, **HapMap.vcf.gz** is generated for the input of Michigan imputation server.
 
 <br/>
 <br/>
