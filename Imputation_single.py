@@ -78,7 +78,10 @@ def HIBAG_CookHLA(__input, __output,__references,__tools,__weights,__mem,__hg, _
     idx_CookHLA = np.where(['CookHLA' in x for x in __tools])[0]
     idx_HIBAG = np.where(['HIBAG' in x for x in __tools])[0]
     
-    INPUT_LIST = __output+"/" + "input_list"
+    INPUT_LIST = __output+"/" + "input_list.txt"
+    REF_NUM = __output+"/"+"ref_num.txt"
+    print("\tThe output file's name with a given weight is written in "+INPUT_LIST+".\n")
+    print("\tThe reference panel's name with its folder name is written in "+REF_NUM+".\n")
     idx=1
     if N_HIBAG > 0:
         for i in range(N_HIBAG):
@@ -89,12 +92,15 @@ def HIBAG_CookHLA(__input, __output,__references,__tools,__weights,__mem,__hg, _
             HIBAG_RUN(__input, __references[idx_HIBAG[i]], HIBAG_dir+"HIBAG_OUT", HIBAG_dir+"HIBAG_OUT.log", __fit)             
             command='rm {}'.format(HIBAG_dir+"HIBAG_OUT_temp.log")
             BASH(command)
+            #print(command)
             command='echo {} {}' .format(HIBAG_dir+"HIBAG_OUT.vcfh", __weights[idx_HIBAG[i]])
-            BASH(command, INPUT_LIST)
+            #print(command)
+            BASH(command, INPUT_LIST,True)
+            print('echo {} : {}'.format(HIBAG_suffix, __references[idx_HIBAG[i]]))
+            BASH('echo {} : {}'.format(HIBAG_suffix, __references[idx_HIBAG[i]]),REF_NUM,True)
             command='Rscript src/hibag_prob.r '+HIBAG_dir
             print('\tRunning code : '+command+'\n')
             os.system(command+' >& '+ __output+'_hibag_prob.log')
-            print("\tThe output file's name with a given weight is written in "+INPUT_LIST+".\n")
             idx+=1
 
     if N_CookHLA > 0: 
@@ -113,15 +119,16 @@ def HIBAG_CookHLA(__input, __output,__references,__tools,__weights,__mem,__hg, _
                 command = 'echo {} {}' .format(__output+'/' + Cook_suffix + "/CookHLA_OUT.MHC.QC.exon2.0.5.raw_imputation_out.vcf", __weights[idx_CookHLA[i]])
             else:
                 raise NameError('4 or 5 is required for beagle version.')
-            BASH(command, INPUT_LIST,True) 
-            print("\tThe output file's name with a given weight is written in "+INPUT_LIST+".\n")
+            BASH(command, INPUT_LIST,True)
+            BASH('echo {} : {}'.format(CookHLA_suffix, __references[idx_CookHLA[i]]),REF_NUM,True) 
             idx+=1
             
     command='mkdir -p '+__output+'/'+'Merge'
     BASH(command)
     command='mkdir -p '+__output+'/'+'Michigan_1'
     BASH(command)
-            
+        
+       
 if __name__=="__main__":
     parser=argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument("--input","-i", help='\nINPUT (PLINK file)\n\n')
