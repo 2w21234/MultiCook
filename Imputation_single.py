@@ -49,9 +49,12 @@ def CookHLA_RUN(_in, _out, _ref, _hg, _mem,_bgl):
         _in='../'+_in
         _out='../'+_out
         _ref='../'+_ref
-    command = '{} -i {} -ref {} -o {} -hg {}' .format(MakeGeneticMap, _in, _ref, _out+"AGM.CookHLA", _hg)
-    print('\tRunning code : '+command+'\n')
-    BASH(command, _out+"AGM.CookHLA.log") 
+    if not(os.path.isfile(_out+"AGM.CookHLA.aver.erate") & os.path.isfile(_out+"AGM.CookHLA.mach_step.avg.clpsB")):
+        command = '{} -i {} -ref {} -o {} -hg {}' .format(MakeGeneticMap, _in, _ref, _out+"AGM.CookHLA", _hg)
+        print("(.aver.erate) and (.mach_step.avg.clpsB) files not found \n")
+        print('\tRunning code : '+command+'\n')
+        BASH(command, _out+"AGM.CookHLA.log")        
+
     if _bgl=='4':
         command = '{} -i {} -ref {} -o {} -gm {} -ae {} -mem {} -hg {} -mp 9 -bgl4' \
                     .format(CookHLA, _in, _ref, _out+"CookHLA_OUT", \
