@@ -1,4 +1,4 @@
-name: /Users/makin/anaconda3/envs/MultiCook
+name: MultiCook
 channels:
   - anaconda
   - bioconda
