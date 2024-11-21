@@ -1,3 +1,5 @@
+
+
 import os, sys, re, subprocess
 import argparse
 import numpy as np
@@ -122,57 +124,127 @@ def VcfMerge(HLA_allele, output, vcf_file):
             normalized_values = values / np.sum([float(v[1]) for v in vcf_file])
             f.write("\t".join(key) + "\t" + "\t".join(map(lambda x: str(round(x, 4)), normalized_values)) + "\n")
 
+
 def clear(__output):
-    for i in HLA:
-        allele_file = Path(f"{__output}.{i.split('HLA_')[1]}.alleles")
-        if allele_file.exists():
-            allele_file.unlink()
+    for i in HLA: os.system("rm %s"%(__output+"."+i.split("HLA_")[1]+".alleles"+"\t"))
 
     for i in HLA:
         for j in vcf_files.keys():
             for l in j.split():
-                for file_path in glob.glob(f"{l}.{i}*"):
-                    try:
-                        os.remove(file_path)
-                    except FileNotFoundError:
-                        continue
+                os.system("rm %s"%(l+"."+i+"*"))
+        for j in vcfh_file:
+            os.system("rm %s"%(j[0]+"."+i+"*"))
+        for j in vcf_file_M:
+            os.system("rm %s"%(j[0]+"."+i+"*"))
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
-    parser.add_argument("--input", "-i", help='input list(vcf,vcfh)', metavar='input list')
-    parser.add_argument("--output", "-o", help='output', metavar='output')
-    args = parser.parse_args()
+
+            
+if __name__=="__main__":
+
+
+    parser=argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
+
+    parser.add_argument("--input","-i",help='input list(vcf,vcfh)',metavar='input list')
+    parser.add_argument("--output","-o",help='output',metavar='output')
+    args=parser.parse_args()
+    #args = parser.parse_args(args=[])
+    #output = args.output
     
-    vcf_list, output = args.input, args.output
-    vcf_file, vcfh_file = [], []
-    vcf_file_M = []  # Michigan
-    vcf_files = {}
+    vcf_list,output=args.input,args.output
+    vcf_file,vcfh_file=[],[]
+    vcf_file_M=[] # Michigan
+    vcf_files={}
     
-    with open(vcf_list, "r") as f1:
-        weights = []
+    #if '/' in output : outdir=re.search('[\S/]*/',output).group()
+    #else : outdir='./'
+       
+    with open(vcf_list,"r") as f1:
+        weights=[]
         for j in f1:
+            #print(j)
             weights.append(float(j.split()[1]))
-        weights = np.array(weights)
-        weights = weights / np.sum(weights)
-    
-    with open(vcf_list, "r") as f1:
-        l = 0
-        m = 0
+        weights=np.array(weights)
+        weights=weights/np.sum(weights)
+        #print(weights)
+
+        
+    with open(vcf_list,"r") as f1:
+        l=0
+        m=0
         for i in f1:
+            #print(i)
+            #print(i)
+            #print([i.split()[0], weights[k]])
             if 'vcfh' in i:
-                vcfh_file.append([i.split()[0], str(weights[l])])
+                #print([i.split()[0], weights[l]])
+                vcfh_file.append([i.split()[0], str(weights[l])]) 
                 l += 1
             elif 'exon' in i:
                 vcf_file.append([i.split()[0], str(weights[l])])
-                f = i.split()[0]
-                fileinput = ""
+                #l += 1
+                f=i.split()[0]
+                fileinput=""
                 for j in range(3):
                     for k in range(3):
                         if "2.3000" in f:
-                            fileinput += f.split("2.3000")[0] + exon[j] + "." + overlap[k] + f.split("2.3000")[1] + " "
-                        else:
-                            fileinput += f.split("2.0.5")[0] + exon[j] + "." + overlap_bgl5[k] + f.split("2.0.5")[1] + " "
-                vcf_files[fileinput] = weights[l]
-                l += 1
+                            fileinput+=f.split("2.3000")[0]+exon[j]+"."+overlap[k]+f.split("2.3000")[1]+" "
+                        else :
+                            fileinput+=f.split("2.0.5")[0]+exon[j]+"."+overlap_bgl5[k]+f.split("2.0.5")[1]+" "
+                #print(i.split()[1])
+                vcf_files[fileinput]=weights[l]
+                l +=1
             else:
-                vcf_file_M.append([
+                vcf_file_M.append([i.split()[0], str(weights[l])])
+                l += 1
+    #print(vcf_file)
+    #print(vcfh_file)
+    #print(vcf_file_M)
+    #print(vcf_file)
+    #print(vcfh_file)
+    #print(vcf_file_M)
+    if vcf_file:
+        for k in vcf_files.keys():
+            for i in k.split():
+                HLA_extract_CookHLA(i)
+        for i in HLA:
+            for k,v in vcf_files.items():
+                #print(j,i)
+                #print(j[0])
+                #print(j[1])
+                #print([i,k,v])
+                VcfWeight([k,i,v])
+                
+    if vcfh_file:
+        for i in vcfh_file:
+            HLA_extract_HIBAG(i[0])
+        for i in HLA:
+            for j in vcfh_file:
+                VcfhWeight([j[0],i,j[1]])
+        for i in vcfh_file: vcf_file.append(i)
+
+    if vcf_file_M:
+        HLA_extract_Michigan(vcf_file_M[0][0])
+        
+        for i in HLA:
+            for j in vcf_file_M:
+                #print(j,i)
+                VcfWeight_Michigan([j[0],i,j[1]])
+        for i in vcf_file_M: vcf_file.append(i)
+    
+    #print(vcf_file)
+    print(output)
+    for i in HLA:
+        VcfMerge(i.split("HLA_")[1], output, vcf_file)
+    
+    command_sub = [output+'.'+x.split('_')[1]+".alleles " for x in HLA]
+    command_sub_1 = ''
+    for i in command_sub:
+        command_sub_1 += i+' '
+    command = 'cat '+command_sub_1+ " > " +output+".all.alleles"
+    #print(command)
+    os.system(command)  
+    clear(output)
+    
+    print('Finished!')
+    print('The results are in '+output+'.all.alleles')
+    
