@@ -1,7 +1,7 @@
 import os,sys,re,subprocess
 import argparse
 import numpy as np
- 
+
 HLA=["HLA_A","HLA_B","HLA_C","HLA_DRB1","HLA_DQA1","HLA_DQB1","HLA_DPA1","HLA_DPB1"]
 exon=["2","3","4"]
 overlap=["3000","4000","5000"]
