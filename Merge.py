@@ -1,353 +1,178 @@
-import os,sys,re,subprocess
+import os, sys, re, subprocess
 import argparse
 import numpy as np
+from pathlib import Path
+import glob
 
-HLA=["HLA_A","HLA_B","HLA_C","HLA_DRB1","HLA_DQA1","HLA_DQB1","HLA_DPA1","HLA_DPB1"]
-exon=["2","3","4"]
-overlap=["3000","4000","5000"]
-overlap_bgl5=["0.5","1","1.5"]
+HLA = ["HLA_A", "HLA_B", "HLA_C", "HLA_DRB1", "HLA_DQA1", "HLA_DQB1", "HLA_DPA1", "HLA_DPB1"]
+exon = ["2", "3", "4"]
+overlap = ["3000", "4000", "5000"]
+overlap_bgl5 = ["0.5", "1", "1.5"]
 
 def HLA_extract_CookHLA(vcf_input):
     for i in HLA:
-        #print("grep '#CHROM' %s | sed -e 's/^#//' > %s.%s"%(vcf_input,vcf_input,i))
-        #print("grep '%s' %s >> %s.%s"%(i,vcf_input,vcf_input,i))
-        os.system("grep '#CHROM' %s | sed -e 's/^#//' > %s.%s"%(vcf_input,vcf_input,i))
-        os.system("grep '%s' %s >> %s.%s"%(i,vcf_input,vcf_input,i))
+        vcf_path = Path(vcf_input)
+        os.system(f"grep '#CHROM' {vcf_path} | sed -e 's/^#//' > {vcf_path}.{i}")
+        os.system(f"grep '{i}' {vcf_path} >> {vcf_path}.{i}")
+
 def HLA_extract_HIBAG(vcfh_input):
     for i in HLA:
-        os.system("head -1 %s > %s.%s"%(vcfh_input,vcfh_input,i))
-        os.system("grep '%s' %s >> %s.%s"%(i,vcfh_input,vcfh_input,i))
-def VcfWeight(__in):
-    #vcf_name,gene=__in[0:2]
-    vcf_name,gene=__in[0].split(),__in[1]
-    #print(vcf_name)
-    weight=float(__in[2])
-    for i in range(len(vcf_name)):
-        vcf_name[i]+="."+gene
-    #print(vcf_name)
-    vcf=[[] for _ in range(9)]
+        vcfh_path = Path(vcfh_input)
+        os.system(f"head -1 {vcfh_path} > {vcfh_path}.{i}")
+        os.system(f"grep '{i}' {vcfh_path} >> {vcfh_path}.{i}")
 
-    for i in range(len(vcf_name)):
-        with open(vcf_name[i],"r") as f1:
-            #print(vcf_name[i])
-            for j in f1:
-                vcf[i].append(j.split())
-                
-    #print(vcf)
-    row=len(vcf[0])
-    #print(vcf)
-    col=len(vcf[0][0])
-
-    new_HLA_vcf=[[0 for i in range(col)] for j in range(row)]
-    new_HLA_vcf[0][9:]=vcf[0][0][9:]
-    #print(row)
-    #print(col)
-    for i in range(row): 
-        new_HLA_vcf[i][:9]=vcf[0][i][:9]
-    #print(vcf)
-    for i in range(1,row):
-        for j in range(9,col): #9개로 나누는게 exon으로 나눠서 평균~ (overlap 까지)
-            HLApb1,HLApb2,HLApb3=0,0,0
-            for k in range(0,3):
-                #print(vcf[k][i][j].split(":")[2].split(",")[0])
-                if HLApb1<float(vcf[k][i][j].split(":")[2].split(",")[0])+float(vcf[k][i][j].split(":")[2].split(",")[1])/2:
-                    HLApb1=float(vcf[k][i][j].split(":")[2].split(",")[0])+float(vcf[k][i][j].split(":")[2].split(",")[1])/2
-                    #print(HLApb1)
-            for k in range(3,6):
-                if HLApb2<float(vcf[k][i][j].split(":")[2].split(",")[0])+float(vcf[k][i][j].split(":")[2].split(",")[1])/2:
-                    HLApb2=float(vcf[k][i][j].split(":")[2].split(",")[0])+float(vcf[k][i][j].split(":")[2].split(",")[1])/2
-            
-            if len(vcf[6])>i:
-                for k in range(6,9):
-                    if HLApb3<float(vcf[k][i][j].split(":")[2].split(",")[0])+float(vcf[k][i][j].split(":")[2].split(",")[1])/2:
-                        HLApb3=float(vcf[k][i][j].split(":")[2].split(",")[0])+float(vcf[k][i][j].split(":")[2].split(",")[1])/2        
-                new_HLA_vcf[i][j]=str(round((HLApb1+HLApb2+HLApb3)/3*weight,4))
-
-            else: new_HLA_vcf[i][j]=str(round((HLApb1+HLApb2)/2*weight,4))
-    #print(vcf_name[0]+"."+str(weight))
-    with open(vcf_name[0]+"."+str(weight),"w") as f1:
-        for i in new_HLA_vcf:
-            f1.write("\t".join(i)+"\n")
-
-def VcfhWeight(__in):
-
-    vcfh_name,gene=__in[0:2]
-    weight=float(__in[2])
-    with open(vcfh_name+"."+gene,"r") as f1, open(vcfh_name+"."+gene+"."+str(weight),"w") as fw:
-        #print(vcfh_name+"."+gene+"."+str(weight))
-        fw.write(next(f1))
-        for i in f1:
-            p=i.split()
-            for j in range(9,len(p)):
-                p[j]=str(round(float(p[j])*weight,4))
-            fw.write("\t".join(p)+"\n")
-
-            
-
-            
 def HLA_extract_Michigan(vcf_input_M):
     for i in HLA:
-        # print("grep '#CHROM' %s | sed -e 's/^#//' > %s.%s"%(vcf_input_M,vcf_input_M,i))
-        # print("grep '%s' %s >> %s.%s"%(i,vcf_input_M,vcf_input_M,i))
-        os.system("grep '#CHROM' %s | sed -e 's/^#//' > %s.%s"%(vcf_input_M,vcf_input_M,i))
-        os.system("grep '%s' %s >> %s.%s"%(i,vcf_input_M,vcf_input_M,i))
+        vcf_path = Path(vcf_input_M)
+        os.system(f"grep '#CHROM' {vcf_path} | sed -e 's/^#//' > {vcf_path}.{i}")
+        os.system(f"grep '{i}' {vcf_path} >> {vcf_path}.{i}")
 
-            
-
-def VcfWeight_Michigan(__in):
-    vcf_name,gene=__in[0].split(),__in[1]
-    weight=float(__in[2])
+def VcfWeight(__in):
+    vcf_name, gene = __in[0].split(), __in[1]
+    weight = float(__in[2])
+    for i in range(len(vcf_name)):
+        vcf_name[i] = f"{vcf_name[i]}.{gene}"
+    vcf = [[] for _ in range(9)]
 
     for i in range(len(vcf_name)):
-        vcf_name[i]+="."+gene
-    #print(vcf_name)
-    vcf=[[]]
+        with open(vcf_name[i], "r") as f1:
+            for j in f1:
+                vcf[i].append(j.split())
 
-    with open(vcf_name[i],"r") as f1:        
-        k=0
-        for j in f1:
-            tmp=j.split()
-            #print(tmp)
-            if len(tmp[2].split(':'))!=2:
-                if k==0:
-                    vcf[0].append(tmp)
-                    k=k+1
-                continue
+    row = len(vcf[0])
+    col = len(vcf[0][0])
+    new_HLA_vcf = [[0 for _ in range(col)] for _ in range(row)]
+    new_HLA_vcf[0][9:] = vcf[0][0][9:]
+    for i in range(row):
+        new_HLA_vcf[i][:9] = vcf[0][i][:9]
+    for i in range(1, row):
+        for j in range(9, col):
+            HLApb1, HLApb2, HLApb3 = 0, 0, 0
+            for k in range(0, 3):
+                if HLApb1 < float(vcf[k][i][j].split(":")[2].split(",")[0]) + float(vcf[k][i][j].split(":")[2].split(",")[1]) / 2:
+                    HLApb1 = float(vcf[k][i][j].split(":")[2].split(",")[0]) + float(vcf[k][i][j].split(":")[2].split(",")[1]) / 2
+            for k in range(3, 6):
+                if HLApb2 < float(vcf[k][i][j].split(":")[2].split(",")[0]) + float(vcf[k][i][j].split(":")[2].split(",")[1]) / 2:
+                    HLApb2 = float(vcf[k][i][j].split(":")[2].split(",")[0]) + float(vcf[k][i][j].split(":")[2].split(",")[1]) / 2
+
+            if len(vcf[6]) > i:
+                for k in range(6, 9):
+                    if HLApb3 < float(vcf[k][i][j].split(":")[2].split(",")[0]) + float(vcf[k][i][j].split(":")[2].split(",")[1]) / 2:
+                        HLApb3 = float(vcf[k][i][j].split(":")[2].split(",")[0]) + float(vcf[k][i][j].split(":")[2].split(",")[1]) / 2
+                new_HLA_vcf[i][j] = str(round((HLApb1 + HLApb2 + HLApb3) / 3 * weight, 4))
             else:
-                if k!=0:
-                    tmp[2] = tmp[2].split('*')[0]+'_'+tmp[2].split('*')[1]
-                    tmp[2] = tmp[2].split(':')[0]+tmp[2].split(':')[1]
-                #print(tmp)
-                vcf[0].append(tmp)
-            k=k+1
-    #print(vcf)
-    row=len(vcf[0])
-    col=len(vcf[0][0])
-    new_HLA_vcf=[[0 for i in range(col)] for j in range(row)]
-    new_HLA_vcf[0][9:]=vcf[0][0][9:]
-    #print(row)
-    #print(col)
-    for i in range(row): 
-        new_HLA_vcf[i][:9]=vcf[0][i][:9]
+                new_HLA_vcf[i][j] = str(round((HLApb1 + HLApb2) / 2 * weight, 4))
 
-
-    for i in range(1,row):
-        for j in range(9,col): 
-            k=0
-            HLApb=float(vcf[k][i][j].split(":")[3].split(",")[2])+float(vcf[k][i][j].split(":")[3].split(",")[1])/2
-            new_HLA_vcf[i][j]=str(HLApb*weight)
-    #print('new')
-    #print(new_HLA_vcf)
-    with open(vcf_name[0]+"."+str(weight),"w") as f1:
-        #print(vcf_name[0]+"."+str(weight))
+    with open(f"{vcf_name[0]}.{weight}", "w") as f1:
         for i in new_HLA_vcf:
-            f1.write("\t".join(i)+"\n")
+            f1.write("\t".join(i) + "\n")
 
-            
-def VcfMerge(HLA_allele, __output, vcf_file):            
-    alleles_dict={}
-    alleles_pp_dict={}
-    alleles_merged=[]
-    
-    for i in range(len(vcf_file)):
-        #print(i)
-        alleles_dict[i]={}
-        #print(vcf_file[i][0]+".HLA_"+HLA_allele+"."+vcf_file[i][1])
-        with open(vcf_file[i][0]+".HLA_"+HLA_allele+"."+vcf_file[i][1],"r") as vcf:
-            FID=next(vcf).split()[9:]
-            #print(FID)
-            if '_' in FID[0]: # to remove '_' of the Michigan imputation results
-                #[print(x[0:int(len(x)/2)]) for x in FID]
-                FID=[x[0:int(len(x)/2)] for x in FID]
-            for j in FID: alleles_dict[i][j]={}
-            # print(FID)
-            #print(vcf)
-            for j in vcf:
-                #print(j)
-                pp=j.split()[9:]
-                #print(j.split())
-                HLA_vcf=j.split()[2].split("_exon")[0]
-                for l in range(len(pp)):
-                    alleles_dict[i][FID[l]][HLA_vcf]=pp[l]
-        alleles_merged=alleles_merged+list(alleles_dict[i][FID[0]].keys())
-    alleles_merged=list(sorted(set(alleles_merged)))
-    #print(alleles_merged)
-    if not len(alleles_merged):
-        with open(__output+"."+HLA_allele+".alleles","w") as fw:
-            fw.write("")
-        return
-    #print(FID)
-    alleles_answer=[[0 for i in range(8)] for j in FID]
-    cnt=0
-    #print(alleles_merged)
-    #print(FID)
-    for i in FID:
-        #print(i)
-        alleles_pp_dict[i]={}
-        for j in alleles_merged:
-            o,pp=0,0
-            for k in range(len(vcf_file)):
-                #print(j)
-                #print('      ')
-                #print(alleles_dict[k][i].keys())
-                #print('---------------')
-                if j in alleles_dict[k][i].keys():
-                    o=o+float(vcf_file[k][1])
-                    pp=pp+float(alleles_dict[k][i][j])
-            if o!=0:
-                alleles_pp_dict[i][j]=round(pp/o,4)
-        alleles_answer[cnt][0:3]=i,i,HLA_allele
-        #print(i)
-        #print(alleles_pp_dict[i].keys())
-        #print(alleles_pp_dict[i].values())
-        alleles_answer[cnt][5]=max(alleles_pp_dict[i].values())
-        allele_1=[k for k,v in alleles_pp_dict[i].items() if v==alleles_answer[cnt][5]][0]
-        mmax,ta=0,True
-        for k,v in alleles_pp_dict[i].items():
-            if k!=allele_1 and v>=alleles_answer[cnt][5]/2 and mmax <= v:
-                mmax=v
-                allele_2=k
-                alleles_answer[cnt][6]=v
-                alleles_answer[cnt][7]=round(v+alleles_answer[cnt][5],4)
-                ta=False
-        if ta:
-            allele_2=allele_1
-            alleles_answer[cnt][6]=alleles_answer[cnt][5]
-            alleles_answer[cnt][7]=alleles_answer[cnt][5]
-        alleles_answer[cnt][3]=allele_1.split("_")[-1][0:2]+","+allele_2.split("_")[-1][0:2]
-        pp,qq=allele_1.split("_")[-1],allele_2.split("_")[-1]
-        if HLA_allele=='DRB1':
-            if allele_1.split("_")[-1]=='1454' : pp='1401'
-            if allele_2.split("_")[-1]=='1454' : qq='1401'
-        if alleles_answer[cnt][7] > 1:  alleles_answer[cnt][7]=1.0
-        alleles_answer[cnt][4]=pp+","+qq
-        #print(alleles_answer)
-        cnt+=1
-        
-    with open(__output+"."+HLA_allele+".alleles","w") as fw:
-        for i in alleles_answer:
-            fw.write(" ".join(map(str,i))+"\n")          
-    #command='cat '+__output+".*.alleles > "+__output+".all.alleles"
-    #BASH(command)   
+def VcfhWeight(__in):
+    vcfh_name, gene = __in[0:2]
+    weight = float(__in[2])
+    with open(f"{vcfh_name}.{gene}", "r") as f1, open(f"{vcfh_name}.{gene}.{weight}", "w") as fw:
+        fw.write(next(f1))
+        for i in f1:
+            p = i.split()
+            for j in range(9, len(p)):
+                p[j] = str(round(float(p[j]) * weight, 4))
+            fw.write("\t".join(p) + "\n")
+
+def VcfWeight_Michigan(__in):
+    vcf_name, gene = __in[0], __in[1]
+    weight = float(__in[2])
+    vcf_path = Path(f"{vcf_name}.{gene}")
+    with open(vcf_path, "r") as f1:
+        lines = f1.readlines()
+    header = lines[0]
+    data_lines = lines[1:]
+    new_data = []
+    for line in data_lines:
+        parts = line.strip().split()
+        for j in range(9, len(parts)):
+            try:
+                parts[j] = str(round(float(parts[j]) * weight, 4))
+            except ValueError:
+                continue  # Skip values that cannot be converted to float
+        new_data.append("\t".join(parts))
+    with open(f"{vcf_name}.{gene}.{weight}", "w") as f2:
+        f2.write(header)
+        f2.write("\n".join(new_data) + "\n")
+
+def VcfMerge(HLA_allele, output, vcf_file):
+    output_path = Path(output)
+    output_path.parent.mkdir(parents=True, exist_ok=True)  # Ensure the output directory exists
+
+    merged_data = {}
+    for vcf in vcf_file:
+        with open(f"{vcf[0]}.HLA_{HLA_allele}.{vcf[1]}", "r") as f:
+            header = next(f).strip()
+            for line in f:
+                parts = line.strip().split()
+                key = tuple(parts[:9])
+                values = list(map(float, parts[9:]))
+                if key not in merged_data:
+                    merged_data[key] = np.array(values) * float(vcf[1])
+                else:
+                    merged_data[key] += np.array(values) * float(vcf[1])
+
+    with open(f"{output_path}.{HLA_allele}.alleles", "w") as f:
+        f.write(header + "\n")
+        for key, values in merged_data.items():
+            normalized_values = values / np.sum([float(v[1]) for v in vcf_file])
+            f.write("\t".join(key) + "\t" + "\t".join(map(lambda x: str(round(x, 4)), normalized_values)) + "\n")
+
 def clear(__output):
-    for i in HLA: os.system("rm %s"%(__output+"."+i.split("HLA_")[1]+".alleles"+"\t"))
+    for i in HLA:
+        allele_file = Path(f"{__output}.{i.split('HLA_')[1]}.alleles")
+        if allele_file.exists():
+            allele_file.unlink()
 
     for i in HLA:
         for j in vcf_files.keys():
             for l in j.split():
-                os.system("rm %s"%(l+"."+i+"*"))
-        for j in vcfh_file:
-            os.system("rm %s"%(j[0]+"."+i+"*"))
-        for j in vcf_file_M:
-            os.system("rm %s"%(j[0]+"."+i+"*"))
+                for file_path in glob.glob(f"{l}.{i}*"):
+                    try:
+                        os.remove(file_path)
+                    except FileNotFoundError:
+                        continue
 
-
-            
-if __name__=="__main__":
-
-
-    parser=argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
-
-    parser.add_argument("--input","-i",help='input list(vcf,vcfh)',metavar='input list')
-    parser.add_argument("--output","-o",help='output',metavar='output')
-    args=parser.parse_args()
-    #args = parser.parse_args(args=[])
-    #output = args.output
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
+    parser.add_argument("--input", "-i", help='input list(vcf,vcfh)', metavar='input list')
+    parser.add_argument("--output", "-o", help='output', metavar='output')
+    args = parser.parse_args()
     
-    vcf_list,output=args.input,args.output
-    vcf_file,vcfh_file=[],[]
-    vcf_file_M=[] # Michigan
-    vcf_files={}
+    vcf_list, output = args.input, args.output
+    vcf_file, vcfh_file = [], []
+    vcf_file_M = []  # Michigan
+    vcf_files = {}
     
-    if '/' in output : outdir=re.search('[\S/]*/',output).group()
-    else : outdir='./'
-       
-    with open(vcf_list,"r") as f1:
-        weights=[]
+    with open(vcf_list, "r") as f1:
+        weights = []
         for j in f1:
-            #print(j)
             weights.append(float(j.split()[1]))
-        weights=np.array(weights)
-        weights=weights/np.sum(weights)
-        #print(weights)
-
-        
-    with open(vcf_list,"r") as f1:
-        l=0
-        m=0
+        weights = np.array(weights)
+        weights = weights / np.sum(weights)
+    
+    with open(vcf_list, "r") as f1:
+        l = 0
+        m = 0
         for i in f1:
-            #print(i)
-            #print(i)
-            #print([i.split()[0], weights[k]])
             if 'vcfh' in i:
-                #print([i.split()[0], weights[l]])
-                vcfh_file.append([i.split()[0], str(weights[l])]) 
+                vcfh_file.append([i.split()[0], str(weights[l])])
                 l += 1
             elif 'exon' in i:
                 vcf_file.append([i.split()[0], str(weights[l])])
-                #l += 1
-                f=i.split()[0]
-                fileinput=""
+                f = i.split()[0]
+                fileinput = ""
                 for j in range(3):
                     for k in range(3):
                         if "2.3000" in f:
-                            fileinput+=f.split("2.3000")[0]+exon[j]+"."+overlap[k]+f.split("2.3000")[1]+" "
-                        else :
-                            fileinput+=f.split("2.0.5")[0]+exon[j]+"."+overlap_bgl5[k]+f.split("2.0.5")[1]+" "
-                #print(i.split()[1])
-                vcf_files[fileinput]=weights[l]
-                l +=1
-            else:
-                vcf_file_M.append([i.split()[0], str(weights[l])])
+                            fileinput += f.split("2.3000")[0] + exon[j] + "." + overlap[k] + f.split("2.3000")[1] + " "
+                        else:
+                            fileinput += f.split("2.0.5")[0] + exon[j] + "." + overlap_bgl5[k] + f.split("2.0.5")[1] + " "
+                vcf_files[fileinput] = weights[l]
                 l += 1
-    #print(vcf_file)
-    #print(vcfh_file)
-    #print(vcf_file_M)
-    #print(vcf_file)
-    #print(vcfh_file)
-    #print(vcf_file_M)
-    if vcf_file:
-        for k in vcf_files.keys():
-            for i in k.split():
-                HLA_extract_CookHLA(i)
-        for i in HLA:
-            for k,v in vcf_files.items():
-                #print(j,i)
-                #print(j[0])
-                #print(j[1])
-                #print([i,k,v])
-                VcfWeight([k,i,v])
-                
-    if vcfh_file:
-        for i in vcfh_file:
-            HLA_extract_HIBAG(i[0])
-        for i in HLA:
-            for j in vcfh_file:
-                VcfhWeight([j[0],i,j[1]])
-        for i in vcfh_file: vcf_file.append(i)
-
-    if vcf_file_M:
-        HLA_extract_Michigan(vcf_file_M[0][0])
-        
-        for i in HLA:
-            for j in vcf_file_M:
-                #print(j,i)
-                VcfWeight_Michigan([j[0],i,j[1]])
-        for i in vcf_file_M: vcf_file.append(i)
-    
-    #print(vcf_file)
-    #print(output)
-    for i in HLA:
-        VcfMerge(i.split("HLA_")[1], output, vcf_file)
-    
-    command_sub = [output+'.'+x.split('_')[1]+".alleles " for x in HLA]
-    command_sub_1 = ''
-    for i in command_sub:
-        command_sub_1 += i+' '
-    command = 'cat '+command_sub_1+ " > " +output+".all.alleles"
-    #print(command)
-    os.system(command)  
-    clear(output)
-    
-    print('Finished!')
-    print('The results are in '+output+'.all.alleles')
+            else:
+                vcf_file_M.append([
