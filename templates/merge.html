@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MultiCook - Step 2: Merge Results</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css">
+</head>
+<body>
+    <div class="container" style="max-width: 800px; margin-top: 50px;">
+        <h1 class="title has-text-centered is-size-1" style="color: #3273dc;">MultiCook<br>Step 2: Merge Results</h1>
+        <form id="merge-form" method="post" enctype="multipart/form-data">
+            <div id="result-container">
+                <div class="box result-set" style="margin-top: 20px; padding: 20px;">
+                    <div class="field">
+                        <label class="label">Upload Results to Merge</label>
+                        <div class="control">
+                            <input class="input" type="file" name="result_files[]" multiple>
+                        </div>
+                    </div>
+                    <div class="field" style="margin-top: 20px;">
+                        <label class="label">Weight</label>
+                        <div class="control">
+                            <input type="number" name="weights[]" class="input" placeholder="Enter weight (e.g., 0.5)" step="0.1">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="button is-link is-light" onclick="addResult()" style="margin-top: 15px;">Add Another Result</button>
+            <div class="field" style="margin-top: 20px;">
+                <label class="label">Working Directory Name</label>
+                <div class="control">
+                    <input type="text" name="working_directory" class="input" placeholder="e.g., my_test" required>
+                </div>
+                <p class="help">The Working Directory Name refers to the folder for the input and output files.</p>
+            </div>
+            <button type="button" class="button is-info is-large" onclick="uploadFiles()" style="width: 100%; margin-top: 20px;">Upload Files</button>
+            <button type="button" class="button is-warning is-large" onclick="loadInputList()" style="width: 100%; margin-top: 20px;">Load input_list.txt</button>
+            <div class="field" style="margin-top: 20px;">
+                <textarea id="input-list-content" class="textarea" placeholder="Input list content will appear here..." rows="10"></textarea>
+            </div>
+            <button type="button" class="button is-success is-large" onclick="saveInputList()" style="width: 100%; margin-top: 20px;">Save input_list.txt</button>
+            <button type="submit" class="button is-primary is-large" style="width: 100%; margin-top: 20px;">Merge Results</button>
+        </form>
+
+        <div id="output-box" style="margin-top: 30px; background-color: #f0f8ff; padding: 20px; border-radius: 8px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
+            <h2 class="title is-4">Merge Process Output</h2>
+            <pre id="output-content" style="height: 400px; overflow-y: auto; white-space: pre-wrap;"></pre>
+        </div>
+
+        <div id="output-files" style="margin-top: 30px;">
+            <a id="download-link" class="button is-link is-large" href="#" style="width: 100%; display: none;">Download Merged Results</a>
+        </div>
+    </div>
+
+    <script>
+        function addResult() {
+            const resultSectionTemplate = `
+                <div class="box result-set" style="margin-top: 20px; padding: 20px;">
+                    <div class="field">
+                        <label class="label">Upload Results to Merge</label>
+                        <div class="control">
+                            <input class="input" type="file" name="result_files[]" multiple>
+                        </div>
+                    </div>
+                    <div class="field" style="margin-top: 20px;">
+                        <label class="label">Weight</label>
+                        <div class="control">
+                            <input class="input" type="number" name="weights[]" placeholder="Enter weight (e.g., 0.5)" step="0.1">
+                        </div>
+                    </div>
+                </div>`;
+            const resultContainer = document.getElementById('result-container');
+            resultContainer.insertAdjacentHTML('beforeend', resultSectionTemplate);
+        }
+
+        async function uploadFiles() {
+            const workingDirectory = document.querySelector('input[name="working_directory"]').value;
+            
+            if (!workingDirectory) {
+                alert("Please enter a working directory name before uploading files.");
+                return;
+            }
+
+            // Get all file inputs and their corresponding weights
+            const fileInputs = Array.from(document.querySelectorAll('input[type="file"][name="result_files[]"]'));
+            const weightInputs = Array.from(document.querySelectorAll('input[name="weights[]"]'));
+
+            try {
+                // Process each section one by one
+                for (let i = 0; i < fileInputs.length; i++) {
+                    const fileInput = fileInputs[i];
+                    const weight = weightInputs[i].value;
+
+                    if (fileInput.files.length > 0) {
+                        const formData = new FormData();
+                        formData.append('working_directory', workingDirectory);
+                        
+                        // Add all files from this input
+                        Array.from(fileInput.files).forEach(file => {
+                            formData.append('result_files[]', file);
+                        });
+                        formData.append('weights[]', weight);
+
+                        // Upload this section's files
+                        const response = await fetch('/upload_files', {
+                            method: 'POST',
+                            body: formData
+                        });
+
+                        const data = await response.json();
+                        if (!data.success) {
+                            throw new Error(data.error);
+                        }
+                    }
+                }
+                alert('Files uploaded successfully.');
+            } catch (error) {
+                alert('Failed to upload files: ' + error);
+                console.error('Error:', error);
+            }
+        }
+
+        function loadInputList() {
+            const workingDirectory = document.querySelector('input[name="working_directory"]').value;
+            if (!workingDirectory) {
+                alert("Please enter a working directory name before loading input_list.txt.");
+                return;
+            }
+            fetch(`/load_input_list?working_directory=${encodeURIComponent(workingDirectory)}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById('input-list-content').value = data.content;
+                    } else {
+                        alert('Failed to load input_list.txt: ' + data.error);
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        function saveInputList() {
+            const workingDirectory = document.querySelector('input[name="working_directory"]').value;
+            const inputListContent = document.getElementById('input-list-content').value;
+            if (!workingDirectory) {
+                alert("Please enter a working directory name before saving input_list.txt.");
+                return;
+            }
+            fetch('/save_input_list', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ working_directory: workingDirectory, input_list_content: inputListContent })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('input_list.txt saved successfully.');
+                } else {
+                    alert('Failed to save input_list.txt: ' + data.error);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        document.getElementById('merge-form').onsubmit = function (event) {
+            event.preventDefault();
+            mergeResults();
+        };
+
+        function mergeResults() {
+            const formData = new FormData(document.getElementById('merge-form'));
+            const outputContent = document.getElementById('output-content');
+            const downloadLink = document.getElementById('download-link');
+            
+            outputContent.innerHTML = '';
+            downloadLink.style.display = 'none';
+
+            fetch('/merge_results', { method: 'POST', body: formData })
+                .then(response => {
+                    if (!response.body) {
+                        outputContent.innerHTML = 'No response from server.';
+                        return;
+                    }
+                    const reader = response.body.getReader();
+                    const decoder = new TextDecoder('utf-8');
+
+                    function read() {
+                        reader.read().then(({ done, value }) => {
+                            if (done) {
+                                outputContent.innerHTML += '\nProcess completed.';
+                                const workingDirectory = formData.get('working_directory');
+                                downloadLink.href = `/download_merged_results/${workingDirectory}`;
+                                downloadLink.style.display = 'block';
+                                return;
+                            }
+                            outputContent.innerHTML += decoder.decode(value);
+                            outputContent.scrollTop = outputContent.scrollHeight;
+                            read();
+                        });
+                    }
+                    read();
+                })
+                .catch(error => { outputContent.innerHTML += `Error: ${error.message}`; });
+        }
+    </script>
+</body>
+</html>
+

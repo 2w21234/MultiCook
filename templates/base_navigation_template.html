@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MultiCook Navigation</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            background-color: #f0f0f0;
+            font-family: 'Arial', sans-serif;
+        }
+        .container {
+            max-width: 900px;
+            margin: 50px auto;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        .navigation {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .navigation .button {
+            margin: 0 15px;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            border-radius: 30px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 class="title has-text-centered is-size-1" style="color: #3273dc;">MultiCook</h1>
+        </header>
+
+        <!-- Navigation Buttons -->
+        <div class="navigation" style="margin-top: 50px;">
+            <a href="/imputation" class="button is-info is-medium is-rounded" style="margin-bottom: 20px;">Step 1: Run Imputation</a><br>
+            <a href="/merge_page" class="button is-info is-medium is-rounded">Step 2: Merge Results</a>
+        </div>
+
+        <!-- Placeholder for main content -->
+        <div id="main-content">
+            <p>Please select an option above to proceed.</p>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="content has-text-centered">
+                <p>&copy; 2024 MultiCook Project - Powered by Flask</p>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>
+

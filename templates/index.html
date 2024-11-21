@@ -1,0 +1,233 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MultiCook - Step 1: Run Each Imputation</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        .loader {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #3498db;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 2s linear infinite;
+            margin: 20px auto;
+            display: none;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container" style="max-width: 800px; margin-top: 50px;">
+       <h1 class="title has-text-centered is-size-1" style="color: #3273dc;">MultiCook<br>Step 1: Run Each Imputation</h1>
+       <form id="imputation-form" action="/run_imputation" method="post" enctype="multipart/form-data">
+           <div class="field">
+               <label class="label">Input Files (.bed, .bim, .fam)</label>
+               <div class="control">
+                   <input class="input" type="file" name="input_files[]" multiple required>
+               </div>
+           </div>
+
+           <div id="tool-container">
+               <div class="box tool-set" style="margin-top: 20px; padding: 20px;">
+                   <div class="field">
+                       <label class="label">Tool</label>
+                       <div class="control">
+                           <div class="select">
+                               <select name="tools[]" onchange="updateReferenceInfo(this)" required>
+                                   <option value="CookHLA">CookHLA</option>
+                                   <option value="HIBAG">HIBAG</option>
+                               </select>
+                           </div>
+                       </div>
+                   </div>
+                   <div class="field">
+                       <label class="label">Reference Panel Files 
+                           <span class="has-text-grey-light reference-info">
+                               (Required format: bed, bim, fam, FRQ.frq, bgl.phased, markers)
+                           </span>
+                       </label>
+                       <div class="control">
+                           <input class="input" type="file" name="ref_panels[]" multiple required />
+                       </div>
+                   </div>
+                   <div class="field">
+                       <label class="label">Weight</label>
+                       <div class="control">
+                           <input class="input" type="number" name="weights[]" placeholder="Enter weight (e.g., 0.5)" step="0.1" required />
+                       </div>
+                   </div>
+               </div>
+           </div>
+
+           <button type="button" class="button is-link is-light" onclick="addTool()" style="margin-top: 15px;">Add Another Tool</button>
+
+           <div class="field" style="margin-top: 20px;">
+               <label class="label">Working Directory Name</label>
+               <div class="control">
+                   <input type="text" name="working_directory" placeholder="e.g., toy" class="input" required>
+               </div>
+           </div>
+
+           <div class='field'>
+               <label class='label'>Human Genome Assembly of Input Data</label> 
+               <div class='control'> 
+                   <div class='select'> 
+                       <select name='genome_assembly' required> 
+                           <option value='19'>19</option> 
+                           <option value='18'>18</option> 
+                       </select> 
+                   </div> 
+               </div> 
+           </div>
+
+           <div class='field'>
+               <label class='label'>Memory (optional)</label> 
+               <div class='control'> 
+                   <input type='text' name='memory' placeholder='e.g., 16g' class='input'> 
+               </div> 
+           </div>
+
+           <button type='submit' class='button is-primary is-large' style='width: 100%;'>Run Single Imputation</button> 
+           <button type='button' onclick='stopProcess()' class='button is-danger is-large' style='width: 100%; margin-top: 10px;'>Stop Process</button> 
+       </form>
+
+       <div class="loader" id="loader"></div>
+
+       <div id='output-box' style='margin-top: 30px; background-color: #f0f8ff; padding: 20px; border-radius: 8px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);'>
+           <h2 class='title is-4'>Process Output</h2> 
+           <pre id='output-content' style='height: 400px; overflow-y: auto; white-space: pre-wrap;'></pre> 
+       </div>
+
+       <div id='output-files' style='margin-top: 30px;'> 
+           <!-- Download button will be dynamically updated -->
+           <a id='download-button' class='button is-link is-large' href='#' style='width: 100%; display: none;'>Download Results</a> 
+           <!-- Link to go to the merge results page -->
+           <a href='/merge_page' class='button is-link is-large' style='width: 100%; margin-top: 10px;'>Go to Step 2: Merge Results</a> 
+       </div> 
+   </div>
+
+   <!-- JavaScript for dynamic behavior -->
+   <script> 
+       function updateReferenceInfo(selectElement) { 
+           const referenceInfo = selectElement.closest('.tool-set').querySelector('.reference-info'); 
+           if (selectElement.value === 'CookHLA') { 
+               referenceInfo.textContent = " (Required format: bed, bim, fam, FRQ.frq, bgl.phased, markers)"; 
+           } else if (selectElement.value === 'HIBAG') { 
+               referenceInfo.textContent = " (Required format: RData)"; 
+           } 
+       }
+
+       function addTool() { 
+           const toolSectionTemplate = `
+               <div class='box tool-set' style='margin-top: 20px; padding: 20px;'> 
+                   <div class='field'> 
+                       <label class='label'>Tool</label> 
+                       <div class='control'> 
+                           <div class='select'> 
+                               <select name='tools[]' onchange='updateReferenceInfo(this)' required> 
+                                   <option value='CookHLA'>CookHLA</option> 
+                                   <option value='HIBAG'>HIBAG</option> 
+                               </select> 
+                           </div> 
+                       </div> 
+                   </div> 
+
+                   <!-- Reference Panel Files -->
+                   <div class='field'>  
+                       <label class='label'>Reference Panel Files  
+                           <span class='has-text-grey-light reference-info'>
+                               (Required format: bed, bim, fam, FRQ.frq, bgl.phased, markers)
+                           </span>
+                       </label>  
+                       <div class='control'>
+                           <input class='input' type='file' name='ref_panels[]' multiple required />  
+                       </div>
+                   </div>  
+
+                   <!-- Weight -->
+                   <div class='field'>  
+                       <label class='label'>Weight</label>  
+                       <div class='control'>  
+                           <input class='input' type='number' name='weights[]' placeholder='Enter weight (e.g., 0.5)' step='.1' required />  
+                       </div>  
+                   </div>  
+               </div>`; 
+
+           const toolContainer = document.getElementById('tool-container'); 
+           toolContainer.insertAdjacentHTML('beforeend', toolSectionTemplate); 
+       }
+
+       document.getElementById('imputation-form').onsubmit = function(event) { 
+           event.preventDefault(); 
+
+           const formData = new FormData(event.target);
+           const loader = document.getElementById('loader');
+           const outputContent = document.getElementById('output-content'); 
+           loader.style.display = 'block';
+
+           outputContent.innerHTML = ''; 
+
+           fetch('/run_imputation', { method: 'POST', body: formData }) 
+               .then(response => { 
+                   if (!response.body) { 
+                       outputContent.innerHTML += 'No response from server.'; 
+                       loader.style.display = 'none';
+                       return; 
+                   } 
+                   const reader = response.body.getReader(); 
+                   const decoder = new TextDecoder('utf-8'); 
+                   function read() { 
+                       reader.read().then(({ done, value }) => { 
+                           if (done) { 
+                               outputContent.innerHTML += '\nProcess completed.'; 
+                               loader.style.display = 'none';
+                               const workingDirectory = formData.get('working_directory');
+                               document.getElementById('download-button').href = `/download_folder/${workingDirectory}`;
+                               document.getElementById('download-button').style.display = 'block';
+                               return; 
+                           } 
+                           outputContent.innerHTML += decoder.decode(value); 
+                           outputContent.scrollTop = outputContent.scrollHeight; 
+                           read(); 
+                       }); 
+                   } 
+                   read(); 
+               }) 
+               .catch(error => { 
+                   outputContent.innerHTML += `Error: ${error.message}`; 
+                   loader.style.display = 'none';
+               }); 
+       }; 
+
+       function stopProcess() { 
+           const outputContent = document.getElementById('output-content');
+           fetch('/stop_process', { method: 'POST' }) 
+               .then(response => response.json()) 
+               .then(data => { 
+                   if (data.status === 'terminated') { 
+                       outputContent.innerHTML += '\nProcess terminated.';
+                       document.getElementById('loader').style.display = 'none';
+                   } else { 
+                       outputContent.innerHTML += '\nNo process to terminate.';
+                   } 
+               }) 
+               .catch(error => {
+                   console.error('Error stopping process:', error);
+                   outputContent.innerHTML += `\nError: ${error.message}`;
+                   document.getElementById('loader').style.display = 'none';
+               }); 
+       }
+   </script>
+
+</body>
+</html>
+
