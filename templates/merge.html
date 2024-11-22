@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,6 +9,9 @@
 <body>
     <div class="container" style="max-width: 800px; margin-top: 50px;">
         <h1 class="title has-text-centered is-size-1" style="color: #3273dc;">MultiCook<br>Step 2: Merge Results</h1>
+        <p class="help" style="font-size: 0.75em; color: red;">The results from Step 1 have already been uploaded.</p>
+        <p class="help" style="font-size: 0.75em; color: red;">To integrate additional outputs, such as those from the Michigan Imputation Server or other collaborations, please upload the corresponding results on this page.</p>
+        <p class="help" style="font-size: 0.75em; color: red;">You may also modify the input list, which includes the imputation files and their weights for merging, by editing the input_list.txt file.</p>
         <form id="merge-form" method="post" enctype="multipart/form-data">
             <div id="result-container">
                 <div class="box result-set" style="margin-top: 20px; padding: 20px;">
@@ -29,7 +33,7 @@
             <div class="field" style="margin-top: 20px;">
                 <label class="label">Working Directory Name</label>
                 <div class="control">
-                    <input type="text" name="working_directory" class="input" placeholder="e.g., my_test" required>
+                    <input type="text" name="working_directory" class="input" placeholder="e.g., toy" required>
                 </div>
                 <p class="help">The Working Directory Name refers to the folder for the input and output files.</p>
             </div>
