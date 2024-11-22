@@ -144,7 +144,11 @@ def VcfWeight_Michigan(__in):
             f1.write("\t".join(i)+"\n")
 
             
-def VcfMerge(HLA_allele, __output, vcf_file):            
+def VcfMerge(HLA_allele, __output, vcf_file):     
+    
+    output_path = Path(__output)
+    output_path.parent.mkdir(parents=True, exist_ok=True)  # Ensure the output directory exists
+    
     alleles_dict={}
     alleles_pp_dict={}
     alleles_merged=[]
@@ -230,18 +234,19 @@ def VcfMerge(HLA_allele, __output, vcf_file):
     #command='cat '+__output+".*.alleles > "+__output+".all.alleles"
     #BASH(command)   
 def clear(__output):
-    for i in HLA: os.system("rm %s"%(__output+"."+i.split("HLA_")[1]+".alleles"+"\t"))
+    for i in HLA:
+        allele_file = Path(f"{__output}.{i.split('HLA_')[1]}.alleles")
+        if allele_file.exists():
+            allele_file.unlink()
 
     for i in HLA:
         for j in vcf_files.keys():
             for l in j.split():
-                os.system("rm %s"%(l+"."+i+"*"))
-        for j in vcfh_file:
-            os.system("rm %s"%(j[0]+"."+i+"*"))
-        for j in vcf_file_M:
-            os.system("rm %s"%(j[0]+"."+i+"*"))
-
-
+                for file_path in glob.glob(f"{l}.{i}*"):
+                    try:
+                        os.remove(file_path)
+                    except FileNotFoundError:
+                        continue
             
 if __name__=="__main__":
 
