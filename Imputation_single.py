@@ -14,11 +14,11 @@ import CookHLA
 
 
 
-HIBAG_fit = "python src/hibag_fit.py"
-HIBAG_prefit = "python src/hibag.py"
-CookHLA = "python CookHLA.py"
-MakeGeneticMap = "python -m MakeGeneticMap"
-PostMerger = "python src/PostMerger_CookBAG.py"
+HIBAG_fit = "python -u src/hibag_fit.py"
+HIBAG_prefit = "python -u src/hibag.py"
+CookHLA = "python -u CookHLA.py"
+MakeGeneticMap = "python -u -m MakeGeneticMap"
+PostMerger = "python -u src/PostMerger_CookBAG.py"
 
 
 def str2bool(v):
