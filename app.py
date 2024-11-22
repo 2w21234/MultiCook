@@ -7,6 +7,7 @@ from werkzeug.utils import secure_filename
 import re
 import shlex
 from subprocess import PIPE, Popen
+import sys
 
 app = Flask(__name__)
 
@@ -46,32 +47,45 @@ def merge_results():
         working_directory = request.form.get('working_directory')
         if not working_directory:
             raise ValueError("Working directory not specified.")
-        
+
         working_dir_path = os.path.join(UPLOAD_FOLDER, working_directory)
         output_path = os.path.join(working_dir_path, 'output')
         os.makedirs(output_path, exist_ok=True)
 
         input_list_path = os.path.join(output_path, 'input_list.txt')
+        #python_executable = sys.executable
         merge_command = [
-            'python', 'Merge.py',
+            'python',
+            'Merge.py',
             '-i', input_list_path,
             '-o', os.path.join(output_path, 'Merge', 'result')
         ]
-        
+
         print("Generated merge command:", ' '.join(merge_command))
 
         def generate():
             yield f"Executing command: {' '.join(merge_command)}\n\n"
-            process = Popen(shlex.split(' '.join(merge_command)), stdout=PIPE, stderr=PIPE, text=True)
-            for line in iter(process.stdout.readline, ''):
+            process = Popen(
+                merge_command,
+                stdout=PIPE,
+                stderr=PIPE,
+                universal_newlines=True,  # text=True 대신
+                bufsize=1,
+                cwd=os.path.dirname(os.path.abspath('Merge.py')),
+                env=os.environ.copy()
+            )
+            for line in process.stdout:
                 yield line
             process.stdout.close()
             process.wait()
+            if process.returncode != 0:
+                yield f"Command failed with return code {process.returncode}\n"
 
         return Response(generate(), mimetype='text/plain')
 
     except Exception as e:
         return jsonify(success=False, error=str(e))
+
 
 
 
