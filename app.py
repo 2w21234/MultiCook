@@ -229,7 +229,7 @@ def run_imputation():
 
         # Generate command
         command = [
-            'python', 'Imputation_single.py',
+            'python -u', 'Imputation_single.py',
             '-i', os.path.join(input_folder, input_file_prefix),
             '-o', output_folder,
             '-t', ' '.join(tools),
