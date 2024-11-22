@@ -31,6 +31,14 @@ cd MultiCook
 conda env create --file MultiCook_[your_os].yaml
 conda activate MultiCook
 ```
+
+To run CookHLA, ensure you download the appropriate mach1 binary for your operating system (Linux or macOS). Place the downloaded binary file in the ./CookHLA/dependency directory.
+
+Note for Windows Users:
+CookHLA and HIBAG are not supported on Windows. As a result, Step 1 (imputation) cannot be performed. Windows users can only proceed with Step 2, which involves merging the results from various imputation runs using Merge.py.
+
+
+
 <br/>
 <br/>
 
@@ -117,9 +125,16 @@ Then, **HapMap.vcf.gz** is generated for the input of Michigan imputation server
 <br/>
 
 
+## (4) Web(.html) based merge
+We have built an user friendly package for **MultiCook**.
 
 
-## (4) References
+
+
+
+
+
+## (5) References
 **Kim H, Lim H and Han B. MultiCook: a tool that improves accuracy of HLA imputation by combining probabilities from multiple reference panels**
 
 Cook S, Choi W, Lim H, et al. Accurate imputation of human leukocyte antigens with CookHLA. Nature Communications. Feb 2021;12(1)1264. doi:10.1038/s41467-021-21541-5  
