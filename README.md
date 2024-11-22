@@ -129,9 +129,9 @@ Then, **HapMap.vcf.gz** is generated for the input of Michigan imputation server
 ## (4) Web(.html) based merge
 We have built a user-friendly package for **MultiCook** based on **Python Flask**, providing a web-based UI. <br/>
 It can be used in three scenarios: <br/>
-  (1) accessing and running the application on a **Linux server** from a local computer, 
-  (2) running the application directly on a **MacBook** or a **Linux machine**, and 
-  (3) running **only the Merge step (Step 2)** on a **Windows** using pre-existing results. 
+  (1) accessing and running the application on a **Linux server** from a local computer,  <br/>
+  (2) running the application directly on a **MacBook** or a **Linux machine**, and  <br/>
+  (3) running **only the Merge step (Step 2)** on a **Windows** using pre-existing results.  <br/>
   
 For the first scenario, connect to the server with <br/>
 ```ssh -p [port number] -L localhost:5000:127.0.0.1:5000 [server user ID]@[server IP address]```, <br/>
