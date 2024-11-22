@@ -13,6 +13,8 @@
         <p class="help" style="font-size: 0.75em; color: red;">To integrate additional outputs, such as those from the Michigan Imputation Server or other collaborations, please upload the corresponding results on this page.</p>
         <p class="help" style="font-size: 0.75em; color: red;">You may also modify the input list, which includes the imputation files and their weights for merging, by editing the input_list.txt file.</p>
         <p class="help" style="font-size: 0.75em; color: red;">For a merge of CookHLA's results, you should upload 9 files (exon 2, 3 and 4 with three window sizes each) at once.</p>
+        <p class="help" style="font-size: 0.75em; color: red;">For example, CookHLA_OUT.MHC.QC.exon2.3000.raw_imputation_out.vcf, ... , CookHLA_OUT.MHC.QC.exon4.5000.raw_imputation_out.vcf</p>
+        <p class="help" style="font-size: 0.75em; color: red;">For a merge of HIBAG's results, you should upload HIBAG.vcf which is generated after src/hibag_prob.r</p>
         <form id="merge-form" method="post" enctype="multipart/form-data">
             <div id="result-container">
                 <div class="box result-set" style="margin-top: 20px; padding: 20px;">
