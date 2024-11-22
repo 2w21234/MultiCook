@@ -56,11 +56,11 @@ def CookHLA_RUN(_in, _out, _ref, _hg, _mem,_bgl):
         BASH(command, _out+"AGM.CookHLA.log")        
 
     if _bgl=='4':
-        command = '{} -i {} -ref {} -o {} -gm {} -ae {} -mem {} -hg {} -mp 9 -bgl4' \
+        command = '{} -i {} -ref {} -o {} -gm {} -ae {} -mem {} -hg {} -bgl4' \
                     .format(CookHLA, _in, _ref, _out+"CookHLA_OUT", \
                     _out+"AGM.CookHLA.mach_step.avg.clpsB", _out+"AGM.CookHLA.aver.erate", _mem, _hg)
     if _bgl=='5':
-                command = '{} -i {} -ref {} -o {} -gm {} -ae {} -mem {} -hg {} -mp 9' \
+                command = '{} -i {} -ref {} -o {} -gm {} -ae {} -mem {} -hg {}' \
                     .format(CookHLA, _in, _ref, _out+"CookHLA_OUT", \
                     _out+"AGM.CookHLA.mach_step.avg.clpsB", _out+"AGM.CookHLA.aver.erate", _mem, _hg)
     print('\tRunning code : '+command+'\n')
