@@ -86,6 +86,14 @@ After running Michigan imputation server, a file names 'chr6.dose.vcf' which is 
 To merge this result within ```MultiCook```, users should insert the path of 'chr6.dose.vcf' with its weight.  
 We provide the result('chr6.dose.vcf.gz') of Michigan server, which needs to be unzipped (```gunzip chr6.dose.vcf.gz```).
 
+For **HIBAG**, HIBAG_{A, B, C, DPA1, DPB1, DQA1, DQB1 and DRB1}.bagout are generated.
+To make 'HIBAG.vcfh' format, run following code.
+'''
+Rscript src/hibag_prob.r path/to/the directory including HIBAG_{A, B, C, DPA1, DPB1, DQA1, DQB1 and DRB1}.bagout files 
+'''
+
+
+
 
 
 ```
