@@ -38,7 +38,15 @@ For MacOS (64bit or 32bit for intel chip), the files are on CookHLA/dependency/m
 
 Note for Windows Users: <br/>
 CookHLA and HIBAG are not supported on Windows. As a result, Step 1 (imputation) cannot be performed. Windows users can only proceed with Step 2, which involves merging the results from various imputation runs using Merge.py.
+ <br/>
+Also, **plink** and some binary files shouled be placed on the same directory.
+Refer to **CookHLA**'s github (https://github.com/WansonChoi/CookHLA).
 
+After placing the relative binary files on ./CookHLA/dependency/, execute the following command on ./CookHLA.
+
+```
+chmod +x dependency/plink dependency/mach1
+```
 
 
 <br/>
