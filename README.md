@@ -37,8 +37,9 @@ The exisiting mach1 file on ./CookHLA/dependency is for linux. <br/>
 For MacOS (64bit or 32bit for intel chip), the files are on CookHLA/dependency/mach1_mac/(32bit or 64bit). <br/>
 
 Note for Windows Users: <br/>
-CookHLA and HIBAG are not supported on Windows. As a result, Step 1 (imputation) cannot be performed. Windows users can only proceed with Step 2, which involves merging the results from various imputation runs using Merge.py.
- <br/>
+CookHLA and HIBAG are not supported on Windows. As a result, Step 1 (imputation) cannot be performed. Windows users can only proceed with Step 2, which involves merging the results from various imputation runs using Merge.py.  <br/>
+
+
 Also, **plink** and some binary files shouled be placed on the same directory.
 Refer to **CookHLA**'s github (https://github.com/WansonChoi/CookHLA).
 
