@@ -32,7 +32,8 @@ conda env create --file MultiCook_[your_os].yaml
 conda activate MultiCook
 ```
 
-To run CookHLA, ensure you download the appropriate mach1 binary for your operating system (Linux or macOS). Place the downloaded binary file in the ./CookHLA/dependency directory.
+To run CookHLA, download the appropriate **mach1** binary for your operating system (Linux or macOS) and place it in the ./CookHLA/dependency directory.
+Note: **mach1** uses a 32-bit binary format. However, macOS versions starting from Catalina (10.15) no longer support 32-bit binaries. Users on macOS Mojave (10.14) or earlier can still use **mach1**.
 
 Note for Windows Users:
 CookHLA and HIBAG are not supported on Windows. As a result, Step 1 (imputation) cannot be performed. Windows users can only proceed with Step 2, which involves merging the results from various imputation runs using Merge.py.
