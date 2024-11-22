@@ -141,6 +141,8 @@ For the second and third scenarios, simply run `conda activate MultiCook` and `f
 <br/>
 After execution, a local address (e.g., `http://127.0.0.1:5000`) will appear in the terminal, which you can open in a web browser to start using **MultiCook**.
 
+![image](https://github.com/user-attachments/assets/66bedad8-b12c-4ad8-90ba-7518baab244d)
+
 <br/>
 <br/>
 
