@@ -127,13 +127,22 @@ Then, **HapMap.vcf.gz** is generated for the input of Michigan imputation server
 
 
 ## (4) Web(.html) based merge
-We have built an user friendly package for **MultiCook**.
+We have built a user-friendly package for **MultiCook** based on **Python Flask**, providing a web-based UI. <br/>
+It can be used in three scenarios: <br/>
+  (1) accessing and running the application on a **Linux server** from a local computer, 
+  (2) running the application directly on a **MacBook** or a **Linux machine**, and 
+  (3) running **only the Merge step (Step 2)** on a **Windows** using pre-existing results. 
+  
+For the first scenario, connect to the server with <br/>
+```ssh -p [port number] -L localhost:5000:127.0.0.1:5000 [server user ID]@[server IP address]```, <br/>
+navigate to the `./MultiCook` directory, and run `conda activate MultiCook` followed by `flask run`. <br/>
+<br/>
+For the second and third scenarios, simply run `conda activate MultiCook` and `flask run` on your terminal. 
+<br/>
+After execution, a local address (e.g., `http://127.0.0.1:5000`) will appear in the terminal, which you can open in a web browser to start using **MultiCook**.
 
-
-
-
-
-
+<br/>
+<br/>
 
 ## (5) References
 **Kim H, Lim H and Han B. MultiCook: a tool that improves accuracy of HLA imputation by combining probabilities from multiple reference panels**
