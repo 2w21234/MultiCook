@@ -84,13 +84,7 @@ Users who want to merge the Michigan impuation server's reult can manually edit 
 
 After running Michigan imputation server, a file names 'chr6.dose.vcf' which is default name of Michigan server is generated.
 To merge this result within ```MultiCook```, users should insert the path of 'chr6.dose.vcf' with its weight.  
-We provide the result('chr6.dose.vcf.gz') of Michigan server, which needs to be unzipped (```gunzip chr6.dose.vcf.gz```).
-
-For **HIBAG**, HIBAG_{A, B, C, DPA1, DPB1, DQA1, DQB1 and DRB1}.bagout are generated.
-To make 'HIBAG.vcfh' format, run following code.
-'''
-Rscript src/hibag_prob.r path/to/the directory including HIBAG_{A, B, C, DPA1, DPB1, DQA1, DQB1 and DRB1}.bagout files 
-'''
+We provide the result('chr6.dose.vcf.gz') of Michigan server, which needs to be unzipped (```gunzip chr6.dose.vcf.gz```). <br/>
 
 
 
@@ -139,6 +133,19 @@ bgzip -c HapMap.vcf > HapMap.vcf.gz
 rm HapMap-updated*
 ```
 Then, **HapMap.vcf.gz** is generated for the input of Michigan imputation server.
+
+
+<br/>
+Note for the users who run HIBAG manually, not using the codes on this github. <br/>
+
+After running HIBAG, HIBAG_{A, B, C, DPA1, DPB1, DQA1, DQB1 and DRB1}.bagout are generated.  
+To generate 'HIBAG.vcfh' format which is the input format for the merge in MultiCook,<br/>
+run following code. <br/>
+```
+Rscript src/hibag_prob.r path/to/the directory including HIBAG_{A, B, C, DPA1, DPB1, DQA1, DQB1 and DRB1}.bagout files 
+```
+
+
 
 <br/>
 <br/>
