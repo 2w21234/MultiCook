@@ -16,11 +16,29 @@ process = None
 
 @app.route('/')
 def index():
+    # Serve the main navigation page (base_navigation_template)
+    return render_template('base_navigation_template.html')
+
+@app.route('/imputation')
+def imputation():
+    # Serve the page for Step 1: Run Each Imputation
+    return render_template('index.html')
+
+@app.route('/merge_page')
+def merge_page():
+    # Serve the page for Step 2: Merge Results
+    return render_template('merge.html')
+
+
+"""
+@app.route('/')
+def index():
     return render_template('index.html')
 
 @app.route('/merge_page')
 def merge_page():
     return render_template('merge.html')
+"""
 
 @app.route('/merge_results', methods=['POST'])
 def merge_results():
