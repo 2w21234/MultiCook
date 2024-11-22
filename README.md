@@ -142,7 +142,7 @@ After running HIBAG, HIBAG_{A, B, C, DPA1, DPB1, DQA1, DQB1 and DRB1}.bagout are
 To generate 'HIBAG.vcfh' format which is the input format for the merge in MultiCook,<br/>
 run following code. <br/>
 ```
-Rscript src/hibag_prob.r path/to/the directory including HIBAG_{A, B, C, DPA1, DPB1, DQA1, DQB1 and DRB1}.bagout files 
+Rscript src/hibag_prob.r {path/to/the directory including HIBAG_{A, B, C, DPA1, DPB1, DQA1, DQB1 and DRB1}.bagout files} 
 ```
 
 
