@@ -245,7 +245,7 @@ def run_imputation():
         def generate():
             global process
             yield f"Executing command: {' '.join(command)}\n\n"
-            process = Popen(shlex.split(' '.join(command)), stdout=PIPE, stderr=PIPE, text=True)
+            process = Popen(shlex.split(' '.join(command)), stdout=PIPE, stderr=PIPE, universal_newlines=True)
             for line in iter(process.stdout.readline, ''):
                 yield line
             process.stdout.close()
