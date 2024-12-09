@@ -153,16 +153,16 @@ Rscript src/hibag_prob.r {path/to/the directory including HIBAG_{A, B, C, DPA1, 
 
 ## (4) Web(.html) based merge
 We have built a user-friendly package for **MultiCook** based on **Python Flask**, providing a web-based UI. <br/>
-It can be used in three scenarios: <br/>
-  (1) accessing and running the application on a **Linux server** from a local computer,  <br/>
-  (2) running the application directly on a **MacBook** or a **Linux machine**, and  <br/>
-  (3) running **only the Merge step (Step 2)** on a **Windows** using pre-existing results.  <br/>
-  
+It can be used in two scenarios: <br/>
+   1. Server-driven execution: Similar to Jupyter notebook, a user can run the application on the remote server and connect to the server by running the UI app on the local computer. The communication goes through a specified port. Both of the imputation and merge steps can be run.<br/>
+   2. Local execution: Without a remote server, all procedures are performed on a local computer. Both the imputation and merge steps can be run on the Mac/Linux platforms. On Windows platform, only the merge step can be run with pre-existing imputation results (as CookHLA and HIBAG have difficulties in running in Windows). <br/>
+
+
 For the first scenario, connect to the server with <br/>
 ```ssh -p [port number] -L localhost:5000:127.0.0.1:5000 [server user ID]@[server IP address]```, <br/>
 navigate to the `./MultiCook` directory, and run `conda activate MultiCook` followed by `flask run`. <br/>
 <br/>
-For the second and third scenarios, simply run `conda activate MultiCook` and `flask run` on your terminal. 
+For the second scenario, simply run `conda activate MultiCook` and `flask run` on your terminal. 
 <br/>
 After execution, a local address (e.g., `http://127.0.0.1:5000`) will appear in the terminal, which you can open in a web browser to start using **MultiCook**.
 
