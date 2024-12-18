@@ -24,6 +24,7 @@ The yaml file of MultiCook is based on
 > CookHLA v1.0.1  
 > HIBAG v1.34.0  
 
+We've check MultiCook based on anaconda version 23.7.4 in Linux, 4.5.4 in Windows and 24.9.2 in MacOS.
 
 ```
 git clone https://github.com/2w21234/MultiCook.git
