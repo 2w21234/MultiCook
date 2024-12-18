@@ -48,6 +48,7 @@ Refer to **CookHLA**'s github (https://github.com/WansonChoi/CookHLA).
 After placing the relative binary files on ./CookHLA/dependency/, execute the following command on ./CookHLA.
 
 ```
+cd CookHLA
 chmod +x dependency/plink dependency/mach1
 ```
 
