@@ -80,7 +80,14 @@ for(f in 1:length(files)){
             }   
         }
     }
-
+    for(k in 1:ncol(probs)){
+        x=probs[k]
+        tmp=top_n(x,2)
+        if(tmp[1,] < tmp[2,]*2){
+            x <- x/2
+            probs[k] <- x
+        }
+    }
     total_probs <- rbind(total_probs, probs)
     
 }
